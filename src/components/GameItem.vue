@@ -1,7 +1,11 @@
 <template>
   <div>
-    <p>{{ gameName }}</p>
-    <img :src="gameImage" alt="game image" width="200" />
+    <p>
+      <slot name="name">Name of the game</slot>
+    </p>
+    <slot name="image">
+      <img :src="gameImage" alt="game image" width="200" />
+    </slot>
   </div>
 </template>
 
