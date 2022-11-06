@@ -6,14 +6,17 @@ import GameItem from "../components/GameItem.vue";
   <div>
     <h2>
       <slot>Featured Games</slot>
+      <p>{{ gamesTopCriticsStore.games }}</p>
     </h2>
     <div v-if="gameList.length > 0" class="games">
       <GameItem v-for="(game, index) in gameList" :key="index" :game-id="'187'">
         <template #name>
           {{ game.name }}
+          <!-- salut -->
         </template>
         <template #image>
           <img :src="game.background_image" alt="game image" width="200" />
+          salut 2
         </template>
       </GameItem>
     </div>
@@ -39,30 +42,32 @@ export default {
   },
 
   setup() {
-    const gameList = ref<any[]>([]);
-    const games = useGamesTopCriticsStore();
+    const gamesTopCritics = useGamesTopCriticsStore();
+    const gameList = ref<any>([]);
 
-    const gameUrl = "http://localhost:8080/games/popular";
+    // const gameUrl = "http://localhost:8080/games/popular";
 
     onBeforeMount(() => {
-      axios
-        .get(gameUrl, {
-          params: {
-            ordering: "-metacritic",
-            platforms: "1",
-            page_size: "10",
-            exclude_additions: "true",
-            dates: "2020-01-01,2022-11-01",
-          },
-        })
-        .then((response) => {
-          gameList.value = response.data.results;
-        });
-      games.fetchGames();
+      // axios
+      //   .get(gameUrl, {
+      //     params: {
+      //       ordering: "-metacritic",
+      //       platforms: "1",
+      //       page_size: "10",
+      //       exclude_additions: "true",
+      //       dates: "2020-01-01,2022-11-01",
+      //     },
+      //   })
+      //   .then((response) => {
+      //     gameList.value = response.data.results;
+      //   });
+      gamesTopCritics.fetchGames();
+      console.log(gameList.value + "value of games");
     });
 
     return {
       gameList,
+      // gamesTopCritics,
     };
   },
 };
