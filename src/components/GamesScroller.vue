@@ -1,35 +1,27 @@
-<!-- <script setup lang="ts">
-import GameItem from "../components/GameItem.vue";
-</script> -->
-
 <template>
   <div>
     <h2>
-      <slot>Featured Games</slot>
-      <p>{{ gamesTopCriticsStore.games }}</p>
+      <slot name="title">Featured Games</slot>
     </h2>
-    <div v-if="gameList.length > 0" class="games">
-      <GameItem v-for="(game, index) in gameList" :key="index" :game-id="'187'">
+    <div v-if="gamesFromProps.length > 0" class="games">
+      <GameItem v-for="game in gamesFromProps" :key="game.id">
         <template #name>
           {{ game.name }}
-          <!-- salut -->
         </template>
         <template #image>
           <img :src="game.background_image" alt="game image" width="200" />
-          salut 2
         </template>
       </GameItem>
+    </div>
+    <div v-else>
+      <p>Loading...</p>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { ref } from "vue";
-import { onBeforeMount } from "vue";
-import axios from "axios";
-import { useGamesTopCriticsStore } from "@/stores/games-top-critics";
+import { computed } from "vue";
 import GameItem from "../components/GameItem.vue";
-
 export default {
   name: "GamesScroller",
   components: {
@@ -37,37 +29,17 @@ export default {
   },
   props: {
     games: {
-      type: Array,
+      default: () => [],
     },
   },
 
-  setup() {
-    const gamesTopCritics = useGamesTopCriticsStore();
-    const gameList = ref<any>([]);
-
-    // const gameUrl = "http://localhost:8080/games/popular";
-
-    onBeforeMount(() => {
-      // axios
-      //   .get(gameUrl, {
-      //     params: {
-      //       ordering: "-metacritic",
-      //       platforms: "1",
-      //       page_size: "10",
-      //       exclude_additions: "true",
-      //       dates: "2020-01-01,2022-11-01",
-      //     },
-      //   })
-      //   .then((response) => {
-      //     gameList.value = response.data.results;
-      //   });
-      gamesTopCritics.fetchGames();
-      console.log(gameList.value + "value of games");
+  setup(props) {
+    const gamesFromProps = computed((): any => {
+      return props.games;
     });
 
     return {
-      gameList,
-      // gamesTopCritics,
+      gamesFromProps,
     };
   },
 };
@@ -76,7 +48,7 @@ export default {
 <style scoped>
 .games {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  gap: 1rem;
+  overflow: auto;
 }
 </style>
