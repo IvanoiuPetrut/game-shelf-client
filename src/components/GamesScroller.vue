@@ -24,6 +24,7 @@ import GameItem from "../components/GameItem.vue";
 import { ref } from "vue";
 import { onBeforeMount } from "vue";
 import axios from "axios";
+import { useGamesTopCriticsStore } from "@/stores/games-top-critics";
 import GameItem from "../components/GameItem.vue";
 
 export default {
@@ -39,16 +40,14 @@ export default {
 
   setup() {
     const gameList = ref<any[]>([]);
+    const games = useGamesTopCriticsStore();
 
-    // const gameUrl = `https://api.rawg.io/api/games`;
     const gameUrl = "http://localhost:8080/games/popular";
-    const gameApiKey = "f062f25bd9424cb6905d4ce655e4e583";
 
     onBeforeMount(() => {
       axios
         .get(gameUrl, {
           params: {
-            key: gameApiKey,
             ordering: "-metacritic",
             platforms: "1",
             page_size: "10",
@@ -59,6 +58,7 @@ export default {
         .then((response) => {
           gameList.value = response.data.results;
         });
+      games.fetchGames();
     });
 
     return {
