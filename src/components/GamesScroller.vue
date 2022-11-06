@@ -4,7 +4,9 @@ import GameItem from "../components/GameItem.vue";
 
 <template>
   <div>
-    <h2>Featured Games</h2>
+    <h2>
+      <slot>Featured Games</slot>
+    </h2>
     <div v-if="gameList.length > 0" class="games">
       <GameItem v-for="(game, index) in gameList" :key="index" :game-id="'187'">
         <template #name>
@@ -38,7 +40,8 @@ export default {
   setup() {
     const gameList = ref<any[]>([]);
 
-    const gameUrl = `https://api.rawg.io/api/games`;
+    // const gameUrl = `https://api.rawg.io/api/games`;
+    const gameUrl = "http://localhost:8080/games/popular";
     const gameApiKey = "f062f25bd9424cb6905d4ce655e4e583";
 
     onBeforeMount(() => {
@@ -46,9 +49,11 @@ export default {
         .get(gameUrl, {
           params: {
             key: gameApiKey,
-            ordering: "-rating",
-            platform: "4",
+            ordering: "-metacritic",
+            platforms: "1",
             page_size: "10",
+            exclude_additions: "true",
+            dates: "2020-01-01,2022-11-01",
           },
         })
         .then((response) => {

@@ -1,11 +1,13 @@
 <template>
-  <div>
-    <p>
-      <slot name="name">Name of the game</slot>
-    </p>
+  <div class="game">
     <slot name="image">
-      <img :src="gameImage" alt="game image" width="200" />
+      <img :src="gameImage" alt="game image" width="200" class="game__img" />
     </slot>
+    <div class="game__content">
+      <p class="game__name">
+        <slot name="name">Name of the game</slot>
+      </p>
+    </div>
   </div>
 </template>
 
@@ -49,4 +51,44 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
+}
+
+.game >>> img {
+  width: 12.8rem;
+  height: 15.6rem;
+  object-fit: cover;
+  border-radius: 7px;
+
+  position: relative;
+}
+.game__content {
+  font-size: 1.2rem;
+  margin: 0;
+  /* temp color */
+  color: #fff;
+  background: linear-gradient(
+    to top,
+    rgba(103, 58, 183, 0.8),
+    transparent,
+    rgba(0, 0, 0, 0.4)
+  );
+  height: 100%;
+  width: 100%;
+
+  position: absolute;
+  bottom: 0;
+}
+
+.game__name {
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-align: center;
+}
+</style>
