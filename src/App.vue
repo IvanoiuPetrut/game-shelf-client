@@ -1,5 +1,14 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from "vue-router";
+import { onBeforeMount } from "vue";
+import { useGamesTopCriticsStore } from "@/stores/games-top-critics";
+
+const store = useGamesTopCriticsStore();
+
+onBeforeMount(() => {
+  store.fetchGames();
+  console.log("fetching games");
+});
 </script>
 
 <template>

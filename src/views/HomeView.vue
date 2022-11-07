@@ -1,16 +1,12 @@
 <script setup lang="ts">
 import GamesScroller from "../components/GamesScroller.vue";
 import { useGamesTopCriticsStore } from "@/stores/games-top-critics";
-import { computed, onBeforeMount } from "vue";
+import { computed } from "vue";
 
 const store = useGamesTopCriticsStore();
 
 const games = computed((): any => {
   return store.games;
-});
-
-onBeforeMount(() => {
-  store.fetchGames();
 });
 </script>
 

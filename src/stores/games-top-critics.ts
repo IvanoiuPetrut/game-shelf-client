@@ -22,7 +22,6 @@ export const useGamesTopCriticsStore = defineStore("gamesTopCritics", {
         })
         .then((response) => {
           this.games = response.data.results;
-          console.log(this.games);
         });
     },
   },
