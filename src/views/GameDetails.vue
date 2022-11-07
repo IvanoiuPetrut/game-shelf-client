@@ -10,6 +10,7 @@ const props = defineProps<{
 const game = ref<any>({});
 const gameScreenshots = ref<any>({});
 const gameTrailers = ref<any>({});
+const gameStoreLinks = ref<any>({});
 
 const fetchGame = async () => {
   axios.get(`${API_URL}/${props.id}`).then((res) => {
@@ -26,6 +27,12 @@ const fetchGameScreenshots = async () => {
 const fetchGameTrailers = async () => {
   axios.get(`${API_URL}/${props.id}/movies`).then((res) => {
     gameTrailers.value = res.data.results;
+  });
+};
+
+const fetchGameStoreLinks = async () => {
+  axios.get(`${API_URL}/${props.id}/stores`).then((res) => {
+    gameStoreLinks.value = res.data.results;
     console.log(res.data.results);
   });
 };
@@ -33,6 +40,7 @@ const fetchGameTrailers = async () => {
 onBeforeMount(() => {
   fetchGame();
   fetchGameScreenshots();
+  fetchGameStoreLinks();
   fetchGameTrailers();
 });
 </script>
@@ -73,8 +81,11 @@ onBeforeMount(() => {
     </ul>
     <p>Buy from</p>
     <ul>
-      <li v-for="store in game.stores" :key="store.store.id">
-        <a :href="store.url">{{ store.store.name }}</a>
+      <li v-for="(store, index) in game.stores" :key="store.store.id">
+        <a :href="gameStoreLinks[index].url" target="_blank">{{
+          store.store.name
+        }}</a>
+        <!-- {{ gameStoreLinks[store.store.id].url }} -->
       </li>
     </ul>
   </main>
