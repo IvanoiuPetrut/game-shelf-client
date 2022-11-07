@@ -9,6 +9,7 @@ const props = defineProps<{
 
 const game = ref<any>({});
 const gameScreenshots = ref<any>({});
+const gameTrailers = ref<any>({});
 
 const fetchGame = async () => {
   axios.get(`${API_URL}/${props.id}`).then((res) => {
@@ -22,9 +23,17 @@ const fetchGameScreenshots = async () => {
   });
 };
 
+const fetchGameTrailers = async () => {
+  axios.get(`${API_URL}/${props.id}/movies`).then((res) => {
+    gameTrailers.value = res.data.results;
+    console.log(res.data.results);
+  });
+};
+
 onBeforeMount(() => {
   fetchGame();
   fetchGameScreenshots();
+  fetchGameTrailers();
 });
 </script>
 
@@ -33,8 +42,8 @@ onBeforeMount(() => {
     <h1>{{ game.name }}</h1>
     <p>{{ game.description_raw }}</p>
     <img :src="game.background_image" alt="game image" width="400" />
-    <h2>Screenshots</h2>
     <div v-if="gameScreenshots.length > 0" class="screenshots">
+      <h2>Screenshots</h2>
       <img
         v-for="screenshot in gameScreenshots"
         :key="screenshot.id"
@@ -42,6 +51,17 @@ onBeforeMount(() => {
         alt="game screenshot"
         width="300"
       />
+    </div>
+    <div v-if="gameTrailers.length > 0" class="trailers">
+      <h2>Trailers</h2>
+      <iframe
+        v-for="trailer in gameTrailers"
+        :key="trailer.id"
+        :src="trailer.data.max"
+        width="300"
+        height="200"
+        allowfullscreen
+      ></iframe>
     </div>
     <!-- <p>Developed by {{ game.developers[0].name }}</p> -->
     <!-- <p>Published by {{ game.publishers[0].name }}</p> -->
