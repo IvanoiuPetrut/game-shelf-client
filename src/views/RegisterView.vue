@@ -1,10 +1,42 @@
-<script setup></script>
+<script setup lang="ts">
+import { ref, watch } from "vue";
+
+const nickname = ref("");
+const email = ref("");
+const password = ref("");
+const passwordConfirm = ref("");
+
+const checkEmail = (email: string): boolean => {
+  const re =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+};
+
+const submit = () => {
+  console.log(nickname.value);
+  console.log(checkEmail(email.value));
+  console.log(password.value);
+  console.log(passwordConfirm.value);
+};
+
+watch(
+  () => email.value,
+  (newEmail) => {
+    if (checkEmail(newEmail)) {
+      console.log("email is valid");
+    } else {
+      console.log("email is invalid");
+    }
+  },
+  { immediate: true }
+);
+</script>
 
 <template>
   <main>
     <div class="register">
       <h1>Start using GameShelf 😎</h1>
-      <form @submit.prevent="register" class="form">
+      <form @submit.prevent="submit" class="form">
         <div class="form__field">
           <label for="nickname" class="form__label">Nickname</label>
           <input
@@ -28,15 +60,19 @@
           />
         </div>
         <div class="form__field">
-          <label for="password2" class="form__label">Confirm Password</label>
+          <label for="passwordConfirm" class="form__label"
+            >Confirm Password</label
+          >
           <input
             type="password"
             class="form__input"
-            id="password2"
-            v-model="password2"
+            id="passwordConfirm"
+            v-model="passwordConfirm"
           />
         </div>
-        <button type="submit" class="btn form__btn">Register</button>
+        <button type="submit" class="btn form__btn" @click="submit">
+          Register
+        </button>
       </form>
     </div>
   </main>
