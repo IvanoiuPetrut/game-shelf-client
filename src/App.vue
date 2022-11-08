@@ -23,7 +23,6 @@ onBeforeMount(() => {
 </template>
 
 <style lang="scss" scoped>
-// @use "" as colors;
 @use "@/assets/style/colors.scss" as colors;
 
 nav {
