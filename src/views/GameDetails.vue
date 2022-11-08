@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onBeforeMount } from "vue";
+import { ref, computed, onBeforeMount } from "vue";
 import axios from "axios";
 import { API_URL } from "@/api";
 
@@ -11,6 +11,14 @@ const game = ref<any>({});
 const gameScreenshots = ref<any>({});
 const gameTrailers = ref<any>({});
 const gameStoreLinks = ref<any>({});
+
+const gameReleaseDate = computed(() => {
+  return new Date(game.value.released).toLocaleDateString("en-GB", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+});
 
 const fetchGame = async () => {
   axios.get(`${API_URL}/${props.id}`).then((res) => {
@@ -66,7 +74,9 @@ onBeforeMount(() => {
           </div>
           <div class="release__field">
             <p class="release__type">Released</p>
-            <p class="release__value">{{ game.released }}</p>
+            <p class="release__value">
+              {{ gameReleaseDate }}
+            </p>
           </div>
         </div>
         <p class="game__description">{{ game.description_raw }}</p>
