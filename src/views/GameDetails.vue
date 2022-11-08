@@ -20,6 +20,10 @@ const gameReleaseDate = computed(() => {
   });
 });
 
+const gameDescription = computed(() => {
+  return game.value.description_raw.substring(0, 200) + "...";
+});
+
 const fetchGame = async () => {
   axios.get(`${API_URL}/${props.id}`).then((res) => {
     game.value = res.data;
@@ -79,7 +83,9 @@ onBeforeMount(() => {
             </p>
           </div>
         </div>
-        <p class="game__description">{{ game.description_raw }}</p>
+        <div>
+          <p class="game__description">{{ gameDescription }}</p>
+        </div>
       </div>
     </div>
     <div v-if="gameScreenshots.length > 0" class="screenshots">
