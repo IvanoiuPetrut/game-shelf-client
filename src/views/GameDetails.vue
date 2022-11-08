@@ -71,49 +71,55 @@ onBeforeMount(() => {
 <template>
   <main>
     <div class="game">
-      <img
-        :src="game.background_image"
-        alt="game image"
-        width="400"
-        class="game__img"
-      />
-      <div class="game__details">
-        <h1 class="game__name">{{ game.name }}</h1>
-        <div class="game__rating">
-          <div class="rating__field">
-            <p class="rating__type">Metacritic</p>
-            <span class="rating__score"
-              >{{ game.metacritic }}
-              {{ howGoodIsTheScore(game.metacritic) }}</span
-            >
-          </div>
-          <div class="rating__field">
-            <p class="rating__type">Users</p>
-            <span class="rating__score"
-              >{{ game.metacritic }}
-              {{ howGoodIsTheScore(game.metacritic) }}</span
-            >
-          </div>
-        </div>
-        <div class="game__release">
-          <div class="release__field">
-            <p class="release__type">Developer</p>
-            <p class="release__value">{{ game.developers[0].name }}</p>
-          </div>
-          <div class="release__field">
-            <p class="release__type">Publisher</p>
-            <p class="release__value">{{ game.publishers[0].name }}</p>
-          </div>
-          <div class="release__field">
-            <p class="release__type">Released</p>
-            <p class="release__value">
-              {{ gameReleaseDate }}
-            </p>
-          </div>
-        </div>
+      <div class="game__details-wrapper">
         <div>
-          <p class="game__description">{{ gameDescription }}</p>
+          <img
+            :src="game.background_image"
+            alt="game image"
+            width="400"
+            class="game__img"
+          />
         </div>
+        <div class="game__details game__details--primary">
+          <h1 class="game__name">{{ game.name }}</h1>
+          <div class="game__rating">
+            <div class="rating__field">
+              <p class="rating__type">Metacritic</p>
+              <span class="rating__score"
+                >{{ game.metacritic }}
+                {{ howGoodIsTheScore(game.metacritic) }}</span
+              >
+            </div>
+            <div class="rating__field">
+              <p class="rating__type">Users</p>
+              <span class="rating__score"
+                >{{ game.metacritic }}
+                {{ howGoodIsTheScore(game.metacritic) }}</span
+              >
+            </div>
+          </div>
+          <div class="game__release">
+            <div class="release__field">
+              <p class="release__type">Developer</p>
+              <p class="release__value">{{ game.developers[0].name }}</p>
+            </div>
+            <div class="release__field">
+              <p class="release__type">Publisher</p>
+              <p class="release__value">{{ game.publishers[0].name }}</p>
+            </div>
+            <div class="release__field">
+              <p class="release__type">Released</p>
+              <p class="release__value">
+                {{ gameReleaseDate }}
+              </p>
+            </div>
+          </div>
+          <div>
+            <p class="game__description">{{ gameDescription }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="game__details">
         <div v-if="gameScreenshots.length > 0">
           <h2>Screenshots</h2>
           <div class="game__screenshots">
@@ -163,10 +169,20 @@ onBeforeMount(() => {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
+  // margin: 3.2rem 3.2rem 1rem 1rem;
 
   &__name {
     font-size: 1.8rem;
     font-weight: bold;
+  }
+
+  &__details-wrapper {
+    @media (min-width: 850px) {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 1rem;
+      margin: 3.2rem 3.2rem 5.6rem 1rem;
+    }
   }
 
   &__details {
@@ -176,11 +192,30 @@ onBeforeMount(() => {
     padding: 0 1rem;
   }
 
+  &__details--primary {
+    @media (min-width: 850px) {
+      margin: 3.2rem 0 0 0;
+      padding: 1.2rem;
+      padding-left: calc(40% + 1.2rem);
+      position: absolute;
+      left: 3.2rem;
+      height: 100%;
+
+      background-color: colors.$neutral-bg-secondary;
+      border-radius: 11px;
+    }
+  }
+
   &__img {
-    // width: min(100%, 400px);
     width: 100%;
     height: min(50vw, 300px);
     object-fit: cover;
+    z-index: 1;
+
+    @media (min-width: 850px) {
+      height: 24.4rem;
+      border-radius: 11px;
+    }
   }
 
   &__description {
@@ -191,6 +226,20 @@ onBeforeMount(() => {
     display: flex;
     gap: 0.8rem;
     overflow: auto;
+
+    @media (min-width: 850px) {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      place-items: center;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 11px;
+      }
+    }
   }
 }
 
@@ -206,6 +255,10 @@ onBeforeMount(() => {
       background-color: colors.$neutral-bg-secondary;
       padding: 0.4rem 0.8rem;
       border-radius: 11px;
+
+      @media (min-width: 850px) {
+        background-color: colors.$neutral-bg;
+      }
     }
 
     &__type {
