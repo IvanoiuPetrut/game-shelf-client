@@ -24,6 +24,11 @@ const router = createRouter({
       component: GameDetails,
       props: true,
     },
+    {
+      path: "/register",
+      name: "register",
+      component: () => import("../views/RegisterView.vue"),
+    },
   ],
 });
 
