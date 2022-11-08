@@ -1,35 +1,22 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref } from "vue";
+import Authentication from "@/services/AuthenticationService";
 
 const nickname = ref("");
 const email = ref("");
 const password = ref("");
 const passwordConfirm = ref("");
 
-const checkEmail = (email: string): boolean => {
-  const re =
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(String(email).toLowerCase());
+// async submit function
+const submit = async () => {
+  const response = await Authentication.register({
+    nickname: nickname.value,
+    email: email.value,
+    password: password.value,
+    passwordConfirm: passwordConfirm.value,
+  });
+  console.log(response.data);
 };
-
-const submit = () => {
-  console.log(nickname.value);
-  console.log(checkEmail(email.value));
-  console.log(password.value);
-  console.log(passwordConfirm.value);
-};
-
-watch(
-  () => email.value,
-  (newEmail) => {
-    if (checkEmail(newEmail)) {
-      console.log("email is valid");
-    } else {
-      console.log("email is invalid");
-    }
-  },
-  { immediate: true }
-);
 </script>
 
 <template>
