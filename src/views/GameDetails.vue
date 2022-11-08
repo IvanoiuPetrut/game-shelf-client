@@ -20,6 +20,18 @@ const gameReleaseDate = computed(() => {
   });
 });
 
+const howGoodIsTheScore = (score: number): string => {
+  if (score >= 90) {
+    return "🤩";
+  } else if (score >= 70) {
+    return "😀";
+  } else if (score >= 50) {
+    return "😐";
+  } else {
+    return "😭";
+  }
+};
+
 const gameDescription = computed(() => {
   return game.value.description_raw.substring(0, 200) + "...";
 });
@@ -67,6 +79,22 @@ onBeforeMount(() => {
       />
       <div class="game__details">
         <h1 class="game__name">{{ game.name }}</h1>
+        <div class="game__rating">
+          <div class="rating__field">
+            <p class="rating__type">Metacritic</p>
+            <span class="rating__score"
+              >{{ game.metacritic }}
+              {{ howGoodIsTheScore(game.metacritic) }}</span
+            >
+          </div>
+          <div class="rating__field">
+            <p class="rating__type">Users</p>
+            <span class="rating__score"
+              >{{ game.metacritic }}
+              {{ howGoodIsTheScore(game.metacritic) }}</span
+            >
+          </div>
+        </div>
         <div class="game__release">
           <div class="release__field">
             <p class="release__type">Developer</p>
@@ -166,6 +194,31 @@ onBeforeMount(() => {
   }
 }
 
+.game__rating {
+  display: flex;
+  gap: 1.6rem;
+  // align-self: center;
+  .rating {
+    &__field {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      background-color: colors.$neutral-bg-secondary;
+      padding: 0.4rem 0.8rem;
+      border-radius: 11px;
+    }
+
+    &__type {
+      color: colors.$neutral-text-secondary;
+      font-size: 1rem;
+    }
+
+    &__score {
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+  }
+}
 .game__release {
   .release {
     &__field {
