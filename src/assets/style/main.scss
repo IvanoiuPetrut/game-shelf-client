@@ -19,3 +19,18 @@ a {
     background-color: colors.$accent-transparent;
   }
 }
+
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 7px;
+  border: none;
+  background-color: colors.$accent;
+  color: colors.$neutral-text;
+  transition: all ease-in-out 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    background-color: colors.$accent-transparent;
+  }
+}
