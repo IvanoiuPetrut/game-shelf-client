@@ -22,17 +22,21 @@ onBeforeMount(() => {
   <RouterView />
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
+// @use "" as colors;
+@use "@/assets/style/colors.scss" as colors;
+
 nav {
   width: 100%;
   font-size: 1.2rem;
   text-align: center;
-  background-color: #333;
+  background-color: colors.$neutral-bg-secondary;
   padding: 1rem 0;
 }
 
 nav a.router-link-exact-active {
-  color: var(--color-text);
+  color: colors.$accent;
+  font-weight: bold;
 }
 
 nav a.router-link-exact-active:hover {
@@ -42,7 +46,7 @@ nav a.router-link-exact-active:hover {
 nav a {
   display: inline-block;
   padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+  border-left: 1px solid colors.$neutral-bg;
 }
 
 nav a:first-of-type {
