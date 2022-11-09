@@ -6,7 +6,6 @@
     <div v-if="gamesFromProps.length > 0" class="games">
       <div v-for="game in gamesFromProps" :key="game.id">
         <router-link :to="{ name: 'gameDetails', params: { id: game.id } }">
-          <!-- <a href="#"> -->
           <GameItem>
             <template #name>
               {{ game.name }}
@@ -15,7 +14,6 @@
               <img :src="game.background_image" alt="game image" width="200" />
             </template>
           </GameItem>
-          <!-- </a> -->
         </router-link>
       </div>
     </div>

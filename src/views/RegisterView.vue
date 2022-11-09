@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import Authentication from "@/services/AuthenticationService";
+import BaseInput from "@/components/BaseInput.vue";
 
 const nickname = ref("");
 const email = ref("");
@@ -24,39 +25,22 @@ const submit = async () => {
     <div class="register">
       <h1>Start using GameShelf 😎</h1>
       <form @submit.prevent="submit" class="form">
-        <div class="form__field">
-          <label for="nickname" class="form__label">Nickname</label>
-          <input
-            type="text"
-            class="form__input"
-            id="nickname"
-            v-model="nickname"
-          />
-        </div>
-        <div class="form__field">
-          <label for="email" class="form__label">E-mail address</label>
-          <input type="text" class="form__input" id="email" v-model="email" />
-        </div>
-        <div class="form__field">
-          <label for="password" class="form__label">Password</label>
-          <input
-            type="password"
-            class="form__input"
-            id="password"
-            v-model="password"
-          />
-        </div>
-        <div class="form__field">
-          <label for="passwordConfirm" class="form__label"
-            >Confirm Password</label
-          >
-          <input
-            type="password"
-            class="form__input"
-            id="passwordConfirm"
-            v-model="passwordConfirm"
-          />
-        </div>
+        <BaseInput v-model="nickname" label="Nickname" type="text"></BaseInput>
+        <BaseInput
+          v-model="email"
+          label="E-mail address"
+          type="email"
+        ></BaseInput>
+        <BaseInput
+          v-model="password"
+          label="Password"
+          type="password"
+        ></BaseInput>
+        <BaseInput
+          v-model="passwordConfirm"
+          label="Confirm password"
+          type="password"
+        ></BaseInput>
         <button type="submit" class="btn form__btn" @click="submit">
           Register
         </button>
