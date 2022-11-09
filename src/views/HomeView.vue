@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import GamesScroller from "../components/GamesScroller.vue";
-import { useGamesTopCriticsStore } from "@/stores/games-top-critics";
 import { computed } from "vue";
+import { useGamesTopCriticsStore } from "@/stores/games-top-critics";
+import GamesScroller from "../components/GamesScroller.vue";
 
 const store = useGamesTopCriticsStore();
 
