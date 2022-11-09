@@ -59,7 +59,7 @@ onMounted(() => {
 
 <template>
   <main>
-    <div class="game">
+    <div class="game" v-if="game.id !== undefined">
       <div class="game__details-wrapper">
         <div>
           <img
@@ -90,11 +90,11 @@ onMounted(() => {
           <div class="game__release">
             <div class="release__field">
               <p class="release__type">Developer</p>
-              <!-- <p class="release__value">{{ game.developers[0].name }}</p> -->
+              <p class="release__value">{{ game.developers[0].name }}</p>
             </div>
             <div class="release__field">
               <p class="release__type">Publisher</p>
-              <!-- <p class="release__value">{{ game.publishers[0].name }}</p> -->
+              <p class="release__value">{{ game.publishers[0].name }}</p>
             </div>
             <div class="release__field">
               <p class="release__type">Released</p>
@@ -144,7 +144,6 @@ onMounted(() => {
             <a :href="gameStoreLinks[index].url" target="_blank">{{
               store.store.name
             }}</a>
-            <!-- {{ gameStoreLinks[store.store.id].url }} -->
           </li>
         </ul>
       </div>
