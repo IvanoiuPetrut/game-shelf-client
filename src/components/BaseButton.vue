@@ -1,9 +1,5 @@
 <script setup lang="ts">
 defineProps({
-  label: {
-    type: String,
-    default: "button",
-  },
   onClick: {
     type: Function,
     default: () => {},
@@ -12,5 +8,7 @@ defineProps({
 </script>
 
 <template>
-  <button>{{ label }}</button>
+  <button @click="onClick()" class="btn">
+    <slot name="text">Button</slot>
+  </button>
 </template>

@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import Authentication from "@/services/AuthenticationService";
 import BaseInput from "@/components/BaseInput.vue";
+import BaseButton from "@/components/BaseButton.vue";
 
 const nickname = ref("");
 const email = ref("");
@@ -41,9 +42,9 @@ const submit = async () => {
           label="Confirm password"
           type="password"
         ></BaseInput>
-        <button type="submit" class="btn form__btn" @click="submit">
-          Register
-        </button>
+        <BaseButton class="btn__form" type="submit" @click="submit">
+          <template #text> Register </template>
+        </BaseButton>
       </form>
     </div>
   </main>
@@ -80,40 +81,14 @@ h1 {
   @media (min-width: 600px) {
     padding: 2.4rem 3.2rem;
   }
+}
 
-  &__field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    margin-bottom: 1.2rem;
-  }
-
-  &__label {
-    font-size: 1.2rem;
-    color: colors.$neutral-text-secondary;
-  }
-
-  &__input {
-    padding: 0.4rem 0.8rem;
-    border: 1px solid colors.$neutral-text-secondary;
-    background-color: colors.$neutral-bg-secondary;
-    border-radius: 7px;
-    font-size: 1.4rem;
-    color: currentColor;
-
-    &:focus {
-      outline: none;
-      border-color: colors.$primary;
-    }
-  }
-
-  &__btn {
-    width: 100%;
-    margin-top: 1.2rem;
-    padding: 1rem 0;
-    font-size: 1rem;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
+.form >>> .form__btn {
+  width: 100%;
+  margin-top: 1.2rem;
+  padding: 1rem 0;
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 </style>

@@ -1,6 +1,12 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <h1>Problems</h1>
+    <ul>
+      <li>
+        BaseButton takes classes where is used but doesent find the css class
+        with the css attributes in the current scope
+      </li>
+    </ul>
   </div>
 </template>
 
