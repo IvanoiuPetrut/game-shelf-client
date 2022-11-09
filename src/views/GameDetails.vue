@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onBeforeMount } from "vue";
+import { ref, computed, onMounted } from "vue";
 import axios from "axios";
 import { API_URL } from "@/api";
 
@@ -33,10 +33,9 @@ const howGoodIsTheScore = (score: number): string => {
 };
 
 const gameDescription = computed(() => {
-  if (game.value.description_raw !== null) {
-    return game.value.description_raw.substring(0, 50) + "...";
-  }
-  return "No description available";
+  return game.value.description_raw
+    ? game.value.description_raw.slice(0, 200) + "..."
+    : "";
 });
 
 const fetchGameDetails = async () => {
@@ -53,9 +52,8 @@ const fetchGameDetails = async () => {
   });
 };
 
-onBeforeMount(() => {
+onMounted(() => {
   fetchGameDetails();
-  console.log("testingggg");
 });
 </script>
 
