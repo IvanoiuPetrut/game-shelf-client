@@ -33,38 +33,29 @@ const howGoodIsTheScore = (score: number): string => {
 };
 
 const gameDescription = computed(() => {
-  return game.value.description_raw.substring(0, 200) + "...";
+  if (game.value.description_raw !== null) {
+    return game.value.description_raw.substring(0, 50) + "...";
+  }
+  return "No description available";
 });
 
-const fetchGame = async () => {
-  axios.get(`${API_URL}/${props.id}`).then((res) => {
-    game.value = res.data;
-  });
-};
-
-const fetchGameScreenshots = async () => {
-  axios.get(`${API_URL}/${props.id}/screenshots`).then((res) => {
-    gameScreenshots.value = res.data.results;
-  });
-};
-
-const fetchGameTrailers = async () => {
-  axios.get(`${API_URL}/${props.id}/movies`).then((res) => {
-    gameTrailers.value = res.data.results;
-  });
-};
-
-const fetchGameStoreLinks = async () => {
-  axios.get(`${API_URL}/${props.id}/stores`).then((res) => {
-    gameStoreLinks.value = res.data.results;
+const fetchGameDetails = async () => {
+  Promise.all([
+    axios.get(`${API_URL}/${props.id}`),
+    axios.get(`${API_URL}/${props.id}/screenshots`),
+    axios.get(`${API_URL}/${props.id}/movies`),
+    axios.get(`${API_URL}/${props.id}/stores`),
+  ]).then((response) => {
+    game.value = response[0].data;
+    gameScreenshots.value = response[1].data.results;
+    gameTrailers.value = response[2].data.results;
+    gameStoreLinks.value = response[3].data.results;
   });
 };
 
 onBeforeMount(() => {
-  fetchGame();
-  fetchGameScreenshots();
-  fetchGameStoreLinks();
-  fetchGameTrailers();
+  fetchGameDetails();
+  console.log("testingggg");
 });
 </script>
 
@@ -101,11 +92,11 @@ onBeforeMount(() => {
           <div class="game__release">
             <div class="release__field">
               <p class="release__type">Developer</p>
-              <p class="release__value">{{ game.developers[0].name }}</p>
+              <!-- <p class="release__value">{{ game.developers[0].name }}</p> -->
             </div>
             <div class="release__field">
               <p class="release__type">Publisher</p>
-              <p class="release__value">{{ game.publishers[0].name }}</p>
+              <!-- <p class="release__value">{{ game.publishers[0].name }}</p> -->
             </div>
             <div class="release__field">
               <p class="release__type">Released</p>
