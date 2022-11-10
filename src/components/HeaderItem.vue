@@ -23,7 +23,7 @@ const gameBackgroundImage = computed((): any => {
         and more.
       </p>
       <RouterLink to="/register">
-        <BaseButton>
+        <BaseButton class="btn--cta">
           <template #text> Sign Up for Free </template>
         </BaseButton>
       </RouterLink>
@@ -74,6 +74,12 @@ const gameBackgroundImage = computed((): any => {
   gap: 12.8rem;
   padding: 0 3.2rem;
   margin-bottom: 15.6rem;
+
+  &__section--description {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 
   &__title {
     font-size: 3.6rem;
@@ -140,7 +146,13 @@ const gameBackgroundImage = computed((): any => {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      border-radius: 7px;
     }
   }
+}
+
+.btn--cta {
+  font-size: 1.2rem;
+  padding: 0.8rem 1.6rem;
 }
 </style>

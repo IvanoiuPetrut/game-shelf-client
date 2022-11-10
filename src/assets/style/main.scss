@@ -14,12 +14,6 @@ a {
   transition: 0.4s;
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: colors.$accent-transparent;
-  }
-}
-
 .btn {
   display: inline-block;
   padding: 0.5rem 1rem;
