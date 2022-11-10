@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { useGamesTopCriticsStore } from "@/stores/games-top-critics";
-import { useMouseInElement } from "@vueuse/core";
 import BaseButton from "./BaseButton.vue";
+import HoverItem from "./HoverItem.vue";
 
 const store = useGamesTopCriticsStore();
 
@@ -10,29 +10,6 @@ const gameBackgroundImage = computed((): any => {
   return store.games.map((game: any) => {
     return game.background_image;
   });
-});
-
-const target = ref(null);
-
-const { elementX, elementY, isOutside, elementHeight, elementWidth } =
-  useMouseInElement(target);
-
-const cardTransform = computed(() => {
-  const MAX_ROTATION = 10;
-
-  const rX = (
-    MAX_ROTATION / 2 -
-    (elementY.value / elementHeight.value) * MAX_ROTATION
-  ).toFixed(2);
-
-  const rY = (
-    (elementX.value / elementWidth.value) * MAX_ROTATION -
-    MAX_ROTATION / 2
-  ).toFixed(2);
-
-  return isOutside.value
-    ? ""
-    : `perspective(${elementWidth.value}px) rotateX(${rX}deg) rotateY(${rY}deg)`;
 });
 </script>
 
@@ -76,16 +53,14 @@ const cardTransform = computed(() => {
             class="bookshelf__game"
           />
         </div>
-        <img
-          :src="gameBackgroundImage[3]"
-          alt="book shelf backgorund image"
-          ref="target"
-          class="bookshelf__game bookshelf__game--big"
-          :style="{
-            transform: cardTransform,
-            transition: 'transform 0.25s ease-out',
-          }"
-        />
+        <HoverItem class="bookshelf__game bookshelf__game--big">
+          <template #content>
+            <img
+              :src="gameBackgroundImage[3]"
+              alt="book shelf backgorund image"
+            />
+          </template>
+        </HoverItem>
       </div>
     </div>
   </section>
@@ -161,6 +136,11 @@ const cardTransform = computed(() => {
     height: 300px;
     top: 250px;
     left: -50px;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   }
 }
 </style>
