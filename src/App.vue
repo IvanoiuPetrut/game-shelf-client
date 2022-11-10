@@ -2,6 +2,7 @@
 import { RouterLink, RouterView } from "vue-router";
 import { onBeforeMount } from "vue";
 import { useGamesTopCriticsStore } from "@/stores/games-top-critics";
+import HeaderItem from "./components/HeaderItem.vue";
 
 const store = useGamesTopCriticsStore();
 
@@ -18,6 +19,7 @@ onBeforeMount(() => {
       <RouterLink to="/about">About</RouterLink>
       <RouterLink to="/register">Register</RouterLink>
     </nav>
+    <HeaderItem v-if="$route.path === '/'" />
   </header>
 
   <RouterView />
