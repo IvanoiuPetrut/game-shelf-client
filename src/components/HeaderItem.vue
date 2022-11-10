@@ -5,13 +5,16 @@ import BaseButton from "./BaseButton.vue";
 
 const store = useGamesTopCriticsStore();
 
-const games = computed((): any => {
-  return store.games;
+const gameBackgroundImage = computed((): any => {
+  return store.games.map((game: any) => {
+    return game.background_image;
+  });
 });
 </script>
 
 <template>
   <section class="hero">
+    <!-- {{ gameScreenshots[1] }} -->
     <div class="hero__section--description">
       <h1 class="hero__title">Game Shelf</h1>
       <p class="hero__description">
@@ -29,12 +32,32 @@ const games = computed((): any => {
       <div class="bookshelf">
         <div class="bookshelf__shelf"></div>
         <div class="game__wrapper">
-          <div class="bookshelf__game"></div>
-          <div class="bookshelf__game"></div>
-          <div class="bookshelf__game"></div>
-          <div class="bookshelf__game"></div>
+          <img
+            :src="gameBackgroundImage[0]"
+            alt="book shelf backgorund image"
+            class="bookshelf__game"
+          />
+          <img
+            :src="gameBackgroundImage[1]"
+            alt="book shelf backgorund image"
+            class="bookshelf__game"
+          />
+          <img
+            :src="gameBackgroundImage[6]"
+            alt="book shelf backgorund image"
+            class="bookshelf__game"
+          />
+          <img
+            :src="gameBackgroundImage[5]"
+            alt="book shelf backgorund image"
+            class="bookshelf__game"
+          />
         </div>
-        <div class="bookshelf__game bookshelf__game--big"></div>
+        <img
+          :src="gameBackgroundImage[3]"
+          alt="book shelf backgorund image"
+          class="bookshelf__game bookshelf__game--big"
+        />
       </div>
     </div>
   </section>
@@ -45,7 +68,6 @@ const games = computed((): any => {
 .hero {
   display: grid;
   grid-template-columns: 1.5fr 1fr;
-  // place-items: center;
   gap: 12.8rem;
   padding: 0 3.2rem;
   margin-bottom: 15.6rem;
@@ -73,6 +95,8 @@ const games = computed((): any => {
   border-radius: 11px;
   background: colors.$neutral-bg-secondary;
   position: relative;
+  box-shadow: 0 10px 10px 10px rgba(0, 0, 0, 0.1),
+    0 2px 4px 0 rgba(0, 0, 0, 0.1);
 
   &__shelf {
     background-color: colors.$neutral-bg;
@@ -97,14 +121,14 @@ const games = computed((): any => {
   }
 
   &__game {
-    background: blue;
     border-radius: 7px;
     width: 75px;
     height: 100px;
+    object-fit: cover;
+    box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.1), 0 2px 4px 0 rgba(0, 0, 0, 0.1);
   }
 
   &__game--big {
-    background: crimson;
     width: 250px;
     height: 300px;
     top: 250px;
