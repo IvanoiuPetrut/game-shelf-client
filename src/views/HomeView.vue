@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import { useGamesTopCriticsStore } from "@/stores/games-top-critics";
 import GamesScroller from "../components/GamesScroller.vue";
+import FeatureAndRecommendedItem from "@/components/FeatureAndRecommendedItem.vue";
 
 const store = useGamesTopCriticsStore();
 
@@ -12,6 +13,7 @@ const games = computed((): any => {
 
 <template>
   <main>
+    <FeatureAndRecommendedItem />
     <GamesScroller :games="games">
       <template #title> 🔝Top critically acclaimed games </template>
     </GamesScroller>
