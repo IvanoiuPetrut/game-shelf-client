@@ -53,7 +53,7 @@ const gameBackgroundImage = computed((): any => {
             class="bookshelf__game"
           />
         </div>
-        <HoverItem class="bookshelf__game bookshelf__game--big">
+        <HoverItem class="bookshelf__game--big">
           <template #content>
             <img
               :src="gameBackgroundImage[3]"
@@ -70,28 +70,53 @@ const gameBackgroundImage = computed((): any => {
 @use "@/assets/style/colors.scss" as colors;
 .hero {
   display: grid;
-  grid-template-columns: 1.5fr 1fr;
-  gap: 12.8rem;
+  gap: 6.4rem;
   padding: 0 3.2rem;
   margin-bottom: 15.6rem;
+
+  @media (min-width: 1300px) {
+    grid-template-columns: 1.5fr 1fr;
+  }
 
   &__section--description {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+
+    @media (min-width: 1300px) {
+      align-items: flex-start;
+    }
+  }
+
+  &__section--img {
+    padding: 0 1.6rem;
   }
 
   &__title {
-    font-size: 3.6rem;
+    font-size: 2.4rem;
     font-weight: 700;
     margin-bottom: 1.6rem;
+
+    @media (min-width: 768px) {
+      font-size: 3.6rem;
+    }
+
+    @media (min-width: 1300px) {
+      font-size: 4.2rem;
+    }
   }
 
   &__description {
     color: colors.$neutral-text-secondary;
     font-size: 1.4rem;
     font-weight: 300;
+    text-align: center;
     margin-bottom: 3.2rem;
+
+    @media (min-width: 1300px) {
+      text-align: left;
+    }
     strong {
       color: colors.$neutral-text;
     }
@@ -99,24 +124,30 @@ const gameBackgroundImage = computed((): any => {
 }
 
 .bookshelf {
-  width: 100%;
+  width: min(100%, 500px);
   height: 25.6rem;
   border-radius: 11px;
   background: colors.$neutral-bg-secondary;
   position: relative;
   box-shadow: 0 10px 10px 10px rgba(0, 0, 0, 0.1),
     0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
 
   &__shelf {
     background-color: colors.$neutral-bg;
     border: 1px solid colors.$neutral-text-secondary;
     border-radius: 7px;
     position: absolute;
-    width: 110%;
+    width: 100%;
     height: 1.6rem;
     top: 160px;
-    left: 50px;
+    left: 0;
     z-index: 1;
+
+    @media (min-width: 550px) {
+      left: 15%;
+      width: 90%;
+    }
   }
 
   .game__wrapper {
@@ -124,9 +155,14 @@ const gameBackgroundImage = computed((): any => {
     gap: 1.6rem;
     position: absolute;
 
-    top: 75px;
-    left: 77px;
+    top: 18%;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 2;
+
+    @media (min-width: 550px) {
+      left: 60%;
+    }
   }
 
   &__game {
@@ -135,13 +171,20 @@ const gameBackgroundImage = computed((): any => {
     height: 100px;
     object-fit: cover;
     box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.1), 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    &:nth-last-child(2),
+    &:last-child {
+      display: none;
+      @media (min-width: 550px) {
+        display: block;
+      }
+    }
   }
 
   &__game--big {
-    width: 250px;
-    height: 300px;
+    width: min(100%, 300px);
+    height: min(70vw, 350px);
     top: 250px;
-    left: -50px;
+    left: -25px;
     img {
       width: 100%;
       height: 100%;
