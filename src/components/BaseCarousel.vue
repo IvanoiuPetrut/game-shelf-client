@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import IconArrowLeft from "./icons/IconArrowLeft.vue";
+import IconArrowRight from "./icons/IconArrowRight.vue";
 
 const currentSlide = ref(1);
 const slideCount = ref(0);
@@ -26,13 +28,16 @@ const goToSlide = (slide: number) => {
 </script>
 
 <template>
-  Carousel
   <div class="carousel">
     <slot :currentSlide="currentSlide"></slot>
 
     <div class="carousel__navigation">
-      <button @click="previousSlide()">Left</button>
-      <button @click="nextSlide()">Right</button>
+      <button @click="previousSlide()" class="btn">
+        <IconArrowLeft></IconArrowLeft>
+      </button>
+      <button @click="nextSlide()" class="btn">
+        <IconArrowRight></IconArrowRight>
+      </button>
     </div>
 
     <div class="carousel__pagination">
@@ -42,7 +47,6 @@ const goToSlide = (slide: number) => {
         :class="{ active: currentSlide === index + 1 }"
         @click="goToSlide(index + 1)"
       >
-        <!-- {{ slide }} -->
       </span>
     </div>
   </div>
@@ -50,9 +54,12 @@ const goToSlide = (slide: number) => {
 
 <style lang="scss" scoped>
 @use "@/assets/style/colors.scss" as colors;
+@use "@/assets/style/component.scss" as component;
 .carousel {
-  position: relative;
-  height: 100%;
+  // @include component.container;
+  // padding: 0 6rem;
+  // position: relative;
+  // height: 100%;
 
   .carousel__navigation {
     display: flex;
@@ -61,14 +68,31 @@ const goToSlide = (slide: number) => {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    left: 0;
-    right: 0;
+    left: 5%;
+    right: 5%;
+
+    .btn {
+      background: none;
+      border: none;
+      width: 3.6rem;
+      height: 3.6rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 50%;
+      transition: all 0.2s ease-in-out;
+      &:hover {
+        background: colors.$accent;
+      }
+    }
   }
 
   .carousel__pagination {
     display: flex;
-    justify-content: center;
     gap: 0.8rem;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
 
     span {
       width: min(3vw, 1.6rem);
