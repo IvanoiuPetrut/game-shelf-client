@@ -36,7 +36,7 @@ const games = computed((): any => {
 .carousel {
   .carousel__slide {
     display: flex;
-    flex-direction: column;
+    // flex-direction: column;
     align-items: center;
 
     // position: absolute;
@@ -46,8 +46,8 @@ const games = computed((): any => {
   }
 }
 .game__img {
-  width: 80vw;
-  height: 15.6rem;
+  width: min(80vw, 600px);
+  height: 10.6rem;
   object-fit: cover;
 }
 </style>

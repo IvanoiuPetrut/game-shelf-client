@@ -29,16 +29,16 @@ const goToSlide = (slide: number) => {
 
 <template>
   <div class="carousel">
-    <slot :currentSlide="currentSlide"></slot>
-
-    <div class="carousel__navigation">
+    <div class="carousel__content">
       <button @click="previousSlide()" class="btn">
         <IconArrowLeft></IconArrowLeft>
       </button>
+      <slot :currentSlide="currentSlide"></slot>
       <button @click="nextSlide()" class="btn">
         <IconArrowRight></IconArrowRight>
       </button>
     </div>
+    <div class="carousel__navigation"></div>
 
     <div class="carousel__pagination">
       <span
@@ -61,6 +61,13 @@ const goToSlide = (slide: number) => {
   // position: relative;
   // height: 100%;
 
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    height: 100%;
+  }
   .carousel__navigation {
     display: flex;
     justify-content: space-between;
