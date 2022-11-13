@@ -1,7 +1,24 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 
-const currentSlide = ref(2);
+const currentSlide = ref(1);
+const slideCount = ref(0);
+
+onMounted(() => {
+  slideCount.value = document.querySelectorAll(".slide").length;
+});
+
+const nextSlide = () => {
+  currentSlide.value === slideCount.value
+    ? (currentSlide.value = 1)
+    : currentSlide.value++;
+};
+
+const previousSlide = () => {
+  currentSlide.value === 1
+    ? (currentSlide.value = slideCount.value)
+    : currentSlide.value--;
+};
 </script>
 
 <template>
@@ -10,8 +27,8 @@ const currentSlide = ref(2);
     <slot :currentSlide="currentSlide"></slot>
 
     <div class="carousel__navigation">
-      <button>Left</button>
-      <button>Right</button>
+      <button @click="previousSlide()">Left</button>
+      <button @click="nextSlide()">Right</button>
     </div>
   </div>
 </template>
