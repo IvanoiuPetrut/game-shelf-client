@@ -1,24 +1,26 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import IconArrowLeft from "./icons/IconArrowLeft.vue";
 import IconArrowRight from "./icons/IconArrowRight.vue";
 
-const currentSlide = ref(1);
-const slideCount = ref(0);
-
-onMounted(() => {
-  slideCount.value = document.querySelectorAll(".slide").length;
+const props = defineProps({
+  slides: {
+    type: Number,
+    default: 0,
+  },
 });
 
+const currentSlide = ref(1);
+
 const nextSlide = () => {
-  currentSlide.value === slideCount.value
+  currentSlide.value === props.slides
     ? (currentSlide.value = 1)
     : currentSlide.value++;
 };
 
 const previousSlide = () => {
   currentSlide.value === 1
-    ? (currentSlide.value = slideCount.value)
+    ? (currentSlide.value = props.slides)
     : currentSlide.value--;
 };
 
@@ -28,6 +30,7 @@ const goToSlide = (slide: number) => {
 </script>
 
 <template>
+  from props {{ props.slides }} current slide {{ currentSlide }}
   <div class="carousel">
     <div class="carousel__content">
       <button @click="previousSlide()" class="btn">
@@ -42,7 +45,7 @@ const goToSlide = (slide: number) => {
 
     <div class="carousel__pagination">
       <span
-        v-for="(slide, index) in slideCount"
+        v-for="(slide, index) in props.slides"
         :key="index"
         :class="{ active: currentSlide === index + 1 }"
         @click="goToSlide(index + 1)"

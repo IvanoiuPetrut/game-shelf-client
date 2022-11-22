@@ -9,18 +9,19 @@ const store = useGamesTopCriticsStore();
 const games = computed((): any => {
   return store.games;
 });
+
+const slidesNumber = computed((): number => {
+  return games.value.length;
+});
 </script>
 
 <template>
   <h2>Featured & Recommended</h2>
+  {{ slidesNumber }}
   <div class="featured">
-    <BaseCarousel class="carousel" v-slot="{ currentSlide }">
-      <BaseCarouselSlide
-        v-for="(game, index) in games"
-        :key="game.id"
-        class="carousel__slide"
-      >
-        <div v-show="currentSlide === index + 1">
+    <BaseCarousel v-slot="{ currentSlide }" :slides="slidesNumber">
+      <BaseCarouselSlide v-for="(game, index) in games" :key="game.id">
+        <div v-if="currentSlide === index + 1">
           <img :src="game.background_image" alt="game.name" class="game__img" />
           <h3 class="game__name">{{ game.name }}</h3>
         </div>
@@ -31,19 +32,7 @@ const games = computed((): any => {
 
 <style lang="scss" scoped>
 .featured {
-  margin-bottom: 350px;
-}
-.carousel {
-  .carousel__slide {
-    display: flex;
-    // flex-direction: column;
-    align-items: center;
-
-    // position: absolute;
-    // top: 0px;
-    // left: 50%;
-    // transform: translateX(-50%);
-  }
+  margin-bottom: 50px;
 }
 .game__img {
   width: min(80vw, 600px);

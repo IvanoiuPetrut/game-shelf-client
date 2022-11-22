@@ -13,15 +13,11 @@ const games = computed((): any => {
 
 <template>
   <main>
-    <FeatureAndRecommendedItem class="feature" />
+    <FeatureAndRecommendedItem />
     <GamesScroller :games="games">
       <template #title> 🔝Top critically acclaimed games </template>
     </GamesScroller>
   </main>
 </template>
 
-<style lang="scss" scoped>
-.feature {
-  margin-bottom: 300px;
-}
-</style>
+<style lang="scss" scoped></style>
