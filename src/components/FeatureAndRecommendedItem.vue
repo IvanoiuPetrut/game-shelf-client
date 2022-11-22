@@ -21,54 +21,60 @@ const slidesNumber = computed((): number => {
   <div class="featured">
     <BaseCarousel v-slot="{ currentSlide }" :slides="slidesNumber">
       <BaseCarouselSlide v-for="(game, index) in games" :key="game.id">
-        <div v-if="currentSlide === index + 1" class="content">
-          <img :src="game.background_image" alt="game.name" class="game__img" />
-          <div class="game__details">
-            <div class="game__header">
-              <h3 class="game__name">{{ game.name }}</h3>
-              <p class="game__rating">{{ game.metacritic }}</p>
-            </div>
-            <div class="game__details--aside">
-              <div class="details__wrapper">
-                <p class="details__name">Platforms</p>
-                <div class="details__platforms">
-                  <span
-                    v-for="(platform, index) in game.platforms"
-                    :key="index"
-                    class="game__platform"
-                  >
-                    {{ platform.platform.name }}
-                  </span>
-                </div>
+        <router-link :to="{ name: 'gameDetails', params: { id: game.id } }">
+          <div v-if="currentSlide === index + 1" class="content">
+            <img
+              :src="game.background_image"
+              alt="game.name"
+              class="game__img"
+            />
+            <div class="game__details">
+              <div class="game__header">
+                <h3 class="game__name">{{ game.name }}</h3>
+                <p class="game__rating">{{ game.metacritic }}</p>
               </div>
-              <div class="details--hiden">
+              <div class="game__details--aside">
                 <div class="details__wrapper">
-                  <p class="details__name">Released</p>
-                  <p>{{ game.released }}</p>
+                  <p class="details__name">Platforms</p>
+                  <div class="details__platforms">
+                    <span
+                      v-for="(platform, index) in game.platforms"
+                      :key="index"
+                      class="game__platform"
+                    >
+                      {{ platform.platform.name }}
+                    </span>
+                  </div>
                 </div>
-                <div class="details__wrapper">
-                  <p class="details__name">Length</p>
-                  <p>{{ game.playtime }} hours</p>
-                </div>
-                <div class="screenshots__wrapper">
-                  <div
-                    v-for="(screenshot, index) in game.short_screenshots"
-                    :key="screenshot.id"
-                  >
-                    <img
-                      v-if="index > 1 && index < 5"
-                      :src="screenshot.image"
-                      alt="game.name"
-                      class="screenshot"
-                      width="200"
-                      height="150"
-                    />
+                <div class="details--hiden">
+                  <div class="details__wrapper">
+                    <p class="details__name">Released</p>
+                    <p>{{ game.released }}</p>
+                  </div>
+                  <div class="details__wrapper">
+                    <p class="details__name">Length</p>
+                    <p>{{ game.playtime }} hours</p>
+                  </div>
+                  <div class="screenshots__wrapper">
+                    <div
+                      v-for="(screenshot, index) in game.short_screenshots"
+                      :key="screenshot.id"
+                    >
+                      <img
+                        v-if="index > 1 && index < 5"
+                        :src="screenshot.image"
+                        alt="game.name"
+                        class="screenshot"
+                        width="200"
+                        height="150"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </router-link>
       </BaseCarouselSlide>
     </BaseCarousel>
   </div>
@@ -127,6 +133,7 @@ const slidesNumber = computed((): number => {
 .game__rating {
   font-size: 1.6rem;
   font-weight: 700;
+  color: colors.$neutral-text;
   background-color: colors.$accent-transparent;
   padding: 0 0.8rem;
   border-radius: 7px;
