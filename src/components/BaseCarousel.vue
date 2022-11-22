@@ -41,7 +41,6 @@ const goToSlide = (slide: number) => {
         <IconArrowRight></IconArrowRight>
       </button>
     </div>
-    <div class="carousel__navigation"></div>
 
     <div class="carousel__pagination">
       <span
@@ -59,41 +58,12 @@ const goToSlide = (slide: number) => {
 @use "@/assets/style/colors.scss" as colors;
 @use "@/assets/style/component.scss" as component;
 .carousel {
-  // @include component.container;
-  // padding: 0 6rem;
-  // position: relative;
-  // height: 100%;
-
   &__content {
     display: flex;
     align-items: center;
     justify-content: space-between;
     position: relative;
     height: 100%;
-  }
-  .carousel__navigation {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    left: 5%;
-    right: 5%;
-
-    .btn {
-      background: none;
-      border: none;
-      width: 3.6rem;
-      height: 3.6rem;
-      cursor: pointer;
-      padding: 0.5rem;
-      border-radius: 50%;
-      transition: all 0.2s ease-in-out;
-      &:hover {
-        background: colors.$accent;
-      }
-    }
   }
 
   .carousel__pagination {
