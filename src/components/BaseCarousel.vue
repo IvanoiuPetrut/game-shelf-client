@@ -30,7 +30,6 @@ const goToSlide = (slide: number) => {
 </script>
 
 <template>
-  from props {{ props.slides }} current slide {{ currentSlide }}
   <div class="carousel">
     <div class="carousel__content">
       <button @click="previousSlide()" class="btn">
@@ -70,7 +69,7 @@ const goToSlide = (slide: number) => {
     display: flex;
     gap: 0.8rem;
     position: absolute;
-    bottom: 0;
+    bottom: -25px;
     left: 50%;
     transform: translateX(-50%);
 
