@@ -7,6 +7,7 @@ import BaseCarouselSlide from "./BaseCarouselSlide.vue";
 const store = useGamesTopCriticsStore();
 
 const games = computed((): any => {
+  console.log(store.games[0]);
   return store.games;
 });
 
@@ -28,9 +29,9 @@ const slidesNumber = computed((): number => {
               <p class="game__rating">{{ game.metacritic }}</p>
             </div>
             <div class="game__details--aside">
-              <div class="game__platforms">
-                <p>Platforms</p>
-                <div>
+              <div class="details__wrapper">
+                <p class="details__name">Platforms</p>
+                <div class="details__platforms">
                   <span
                     v-for="(platform, index) in game.platforms"
                     :key="index"
@@ -38,6 +39,31 @@ const slidesNumber = computed((): number => {
                   >
                     {{ platform.platform.name }}
                   </span>
+                </div>
+              </div>
+              <div class="details--hiden">
+                <div class="details__wrapper">
+                  <p class="details__name">Released</p>
+                  <p>{{ game.released }}</p>
+                </div>
+                <div class="details__wrapper">
+                  <p class="details__name">Length</p>
+                  <p>{{ game.playtime }} hours</p>
+                </div>
+                <div class="screenshots__wrapper">
+                  <div
+                    v-for="(screenshot, index) in game.short_screenshots"
+                    :key="screenshot.id"
+                  >
+                    <img
+                      v-if="index > 1 && index < 5"
+                      :src="screenshot.image"
+                      alt="game.name"
+                      class="screenshot"
+                      width="200"
+                      height="150"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -57,6 +83,28 @@ const slidesNumber = computed((): number => {
 
 .content {
   position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 11px;
+
+  &:hover {
+    .game__img {
+      transition: all 0.3s ease-in-out;
+      transform: scale(1.1);
+    }
+    .game__details {
+      transition: all 0.3s ease-in-out;
+      height: 80%;
+    }
+
+    .details--hiden {
+      display: block;
+    }
+  }
+}
+
+.details--hiden {
+  display: none;
 }
 .game__img {
   width: 100%;
@@ -85,7 +133,7 @@ const slidesNumber = computed((): number => {
 }
 .game__details {
   @media (min-width: 768px) {
-    padding: 9.6rem 1.2rem 1.2rem 1.2rem;
+    padding: 1.2rem;
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -115,20 +163,38 @@ const slidesNumber = computed((): number => {
   }
 }
 
-.game__platforms {
+.details__wrapper {
   display: flex;
   align-items: baseline;
   gap: 0.8rem;
   color: colors.$neutral-text-secondary;
+}
 
-  p {
-    font-size: 1.2rem;
-    font-weight: 700;
+.details__platforms {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.details__name {
+  color: colors.$neutral-text-secondary;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.screenshots__wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 1.6rem;
+
+  .screenshot {
+    border-radius: 7px;
+    object-fit: cover;
+    width: min(20vw, 200px);
   }
 
-  div {
-    display: flex;
-    gap: 0.8rem;
-  }
+  // @media (min-width: 768px) {
+  //   display: block;
+  // }
 }
 </style>
