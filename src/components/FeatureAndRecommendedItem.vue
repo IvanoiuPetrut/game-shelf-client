@@ -17,7 +17,6 @@ const slidesNumber = computed((): number => {
 </script>
 
 <template>
-  <h2 class="title">Featured & Recommended</h2>
   <div class="featured">
     <BaseCarousel v-slot="{ currentSlide }" :slides="slidesNumber">
       <BaseCarouselSlide v-for="(game, index) in games" :key="game.id">
@@ -87,16 +86,10 @@ const slidesNumber = computed((): number => {
 @use "@/assets/style/colors.scss" as colors;
 @use "@/assets/style/component.scss" as component;
 
-.title {
-  font-size: 1.4rem;
-  margin: 0 0 2rem 0;
-  text-align: center;
-  // padding: 0 0 0 6.4rem;
-}
 .featured {
-  margin-bottom: 50px;
   @media (min-width: 768px) {
     @include component.container;
+    margin-bottom: 12.6rem;
   }
 }
 
@@ -127,7 +120,7 @@ const slidesNumber = computed((): number => {
 
   @media (min-width: 550px) {
     height: min(55vw, 500px);
-    width: min(65vw, 1000px);
+    width: min(65vw, 1400px);
   }
 }
 
@@ -165,11 +158,6 @@ const slidesNumber = computed((): number => {
     border-radius: 0 0 11px 11px;
     transition: all 0.3s ease-in-out;
     transform: translateY(73%);
-    // background: linear-gradient(
-    //   180deg,
-    //   rgba(0, 0, 0, 0) 0%,
-    //   rgba(0, 0, 0, 4) 50%
-    // );
     background: colors.$neutral-gradient;
   }
 }

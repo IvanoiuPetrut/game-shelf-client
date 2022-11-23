@@ -71,9 +71,9 @@ const gameBackgroundImage = computed((): any => {
 @use "@/assets/style/_component.scss" as components;
 .hero {
   @include components.container;
-  display: flex;
+  display: grid;
   gap: 6.4rem;
-  margin-bottom: 15.6rem;
+  margin-bottom: 24.6rem;
 
   @media (min-width: 1300px) {
     grid-template-columns: 1.5fr 1fr;
