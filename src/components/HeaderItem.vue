@@ -68,10 +68,11 @@ const gameBackgroundImage = computed((): any => {
 
 <style lang="scss" scoped>
 @use "@/assets/style/colors.scss" as colors;
+@use "@/assets/style/_component.scss" as components;
 .hero {
-  display: grid;
+  @include components.container;
+  display: flex;
   gap: 6.4rem;
-  padding: 0 3.2rem;
   margin-bottom: 15.6rem;
 
   @media (min-width: 1300px) {

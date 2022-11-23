@@ -17,7 +17,7 @@ const slidesNumber = computed((): number => {
 </script>
 
 <template>
-  <h2>Featured & Recommended</h2>
+  <h2 class="title">Featured & Recommended</h2>
   <div class="featured">
     <BaseCarousel v-slot="{ currentSlide }" :slides="slidesNumber">
       <BaseCarouselSlide v-for="(game, index) in games" :key="game.id">
@@ -85,9 +85,19 @@ const slidesNumber = computed((): number => {
 
 <style lang="scss" scoped>
 @use "@/assets/style/colors.scss" as colors;
+@use "@/assets/style/component.scss" as component;
 
+.title {
+  font-size: 1.4rem;
+  margin: 0 0 2rem 0;
+  text-align: center;
+  // padding: 0 0 0 6.4rem;
+}
 .featured {
   margin-bottom: 50px;
+  @media (min-width: 768px) {
+    @include component.container;
+  }
 }
 
 .content {
@@ -100,7 +110,7 @@ const slidesNumber = computed((): number => {
     .game__img {
       transition: all 0.3s ease-in-out;
       transform: scale(1.1);
-      filter: blur(3pFx);
+      filter: blur(2px);
     }
     .game__details {
       transform: translateY(0);
@@ -116,15 +126,20 @@ const slidesNumber = computed((): number => {
   transform: scale(1.05);
 
   @media (min-width: 550px) {
-    height: min(45vw, 500px);
-    width: min(80vw, 1000px);
+    height: min(55vw, 500px);
+    width: min(65vw, 1000px);
   }
 }
 
 .game__header {
   display: flex;
   align-items: baseline;
+  justify-content: center;
   gap: 1.6rem;
+
+  @media (min-width: 768px) {
+    justify-content: flex-start;
+  }
 }
 
 .game__rating {
@@ -134,6 +149,11 @@ const slidesNumber = computed((): number => {
   background-color: colors.$accent-transparent;
   padding: 0 0.8rem;
   border-radius: 7px;
+  display: none;
+
+  @media (min-width: 550px) {
+    display: block;
+  }
 }
 .game__details {
   @media (min-width: 768px) {
@@ -144,7 +164,7 @@ const slidesNumber = computed((): number => {
     width: 100%;
     border-radius: 0 0 11px 11px;
     transition: all 0.3s ease-in-out;
-    transform: translateY(71%);
+    transform: translateY(73%);
     // background: linear-gradient(
     //   180deg,
     //   rgba(0, 0, 0, 0) 0%,
@@ -161,13 +181,10 @@ const slidesNumber = computed((): number => {
   }
 }
 .game__name {
-  font-size: 1.8rem;
+  font-size: 1.4rem;
   font-weight: 700;
-  color: colors.$neutral-text;
   text-align: center;
-  @media (min-width: 768px) {
-    text-align: start;
-  }
+  color: colors.$neutral-text;
 }
 
 .details__wrapper {
@@ -199,9 +216,5 @@ const slidesNumber = computed((): number => {
     object-fit: cover;
     width: min(20vw, 200px);
   }
-
-  // @media (min-width: 768px) {
-  //   display: block;
-  // }
 }
 </style>

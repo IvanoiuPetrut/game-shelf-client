@@ -55,14 +55,26 @@ const goToSlide = (slide: number) => {
 
 <style lang="scss" scoped>
 @use "@/assets/style/colors.scss" as colors;
-@use "@/assets/style/component.scss" as component;
+// @use "@/assets/style/component.scss" as component;
 .carousel {
   &__content {
+    // @include component.container;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 2.4rem;
     position: relative;
     height: 100%;
+
+    .btn {
+      padding: 0;
+      background: none;
+
+      @media (min-width: 550px) {
+        padding: 0.5rem 1rem;
+        background-color: colors.$accent;
+      }
+    }
   }
 
   .carousel__pagination {
