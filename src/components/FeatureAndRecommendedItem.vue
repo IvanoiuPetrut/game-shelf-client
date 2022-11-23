@@ -21,8 +21,11 @@ const slidesNumber = computed((): number => {
   <div class="featured">
     <BaseCarousel v-slot="{ currentSlide }" :slides="slidesNumber">
       <BaseCarouselSlide v-for="(game, index) in games" :key="game.id">
-        <router-link :to="{ name: 'gameDetails', params: { id: game.id } }">
-          <div v-if="currentSlide === index + 1" class="content">
+        <router-link
+          :to="{ name: 'gameDetails', params: { id: game.id } }"
+          v-if="currentSlide === index + 1"
+        >
+          <div class="content">
             <img
               :src="game.background_image"
               alt="game.name"
@@ -97,26 +100,20 @@ const slidesNumber = computed((): number => {
     .game__img {
       transition: all 0.3s ease-in-out;
       transform: scale(1.1);
+      filter: blur(3pFx);
     }
     .game__details {
-      transition: all 0.3s ease-in-out;
-      height: 80%;
-    }
-
-    .details--hiden {
-      display: block;
+      transform: translateY(0);
     }
   }
 }
 
-.details--hiden {
-  display: none;
-}
 .game__img {
   width: 100%;
   height: 10.6rem;
   object-fit: cover;
   border-radius: 11px;
+  transform: scale(1.05);
 
   @media (min-width: 550px) {
     height: min(45vw, 500px);
@@ -143,14 +140,17 @@ const slidesNumber = computed((): number => {
     padding: 1.2rem;
     position: absolute;
     bottom: 0;
+    height: 70%;
     width: 100%;
     border-radius: 0 0 11px 11px;
-
-    background: linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0) 0%,
-      rgba(0, 0, 0, 4) 100%
-    );
+    transition: all 0.3s ease-in-out;
+    transform: translateY(71%);
+    // background: linear-gradient(
+    //   180deg,
+    //   rgba(0, 0, 0, 0) 0%,
+    //   rgba(0, 0, 0, 4) 50%
+    // );
+    background: colors.$neutral-gradient;
   }
 }
 

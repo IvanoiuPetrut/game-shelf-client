@@ -9,3 +9,6 @@ $neutral-bg-secondary: #1a1b25;
 
 $neutral-text: #fdfcff;
 $neutral-text-secondary: #b3b3b3;
+
+$accent-gradient: linear-gradient(360deg, $accent, rgba(0, 0, 0, 0));
+$neutral-gradient: linear-gradient(360deg, $neutral-bg, rgba(0, 0, 0, 0.7));
