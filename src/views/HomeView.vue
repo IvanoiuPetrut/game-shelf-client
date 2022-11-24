@@ -15,7 +15,7 @@ const games = computed((): any => {
   <main>
     <FeatureAndRecommendedItem />
     <GamesScroller :games="games">
-      <template #title> 🔝Top critically acclaimed games </template>
+      <template #title> Critically acclaimed games </template>
     </GamesScroller>
   </main>
 </template>

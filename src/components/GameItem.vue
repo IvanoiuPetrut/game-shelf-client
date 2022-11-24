@@ -61,8 +61,8 @@ export default {
 }
 
 .game >>> img {
-  width: 12.8rem;
-  height: 15.6rem;
+  width: 100%;
+  height: 18.6rem;
   object-fit: cover;
   border-radius: 7px;
 
@@ -73,12 +73,7 @@ export default {
   margin: 0;
   /* temp color */
   color: #fff;
-  background: linear-gradient(
-    to top,
-    rgba(103, 58, 183, 0.8),
-    transparent,
-    rgba(0, 0, 0, 0.4)
-  );
+
   height: 100%;
   width: 100%;
 
