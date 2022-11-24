@@ -168,10 +168,6 @@ export default {
   gap: 1.2rem;
 }
 
-h2 {
-  font-size: 1.8rem;
-}
-
 .games {
   display: flex;
   gap: 1.6rem;
