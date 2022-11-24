@@ -4,9 +4,8 @@
       <img :src="gameImage" alt="game image" width="200" class="game__img" />
     </slot>
     <div class="game__content">
-      <p class="game__name">
-        <slot name="name">Name of the game</slot>
-      </p>
+      <slot name="genre">Genre</slot>
+      <slot name="name">Name of the game</slot>
     </div>
   </div>
 </template>
@@ -51,39 +50,24 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@use "@/assets/style/colors.scss" as colors;
 .game {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+  gap: 0.8rem;
   box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
 }
 
-.game >>> img {
-  width: 100%;
-  height: 18.6rem;
-  object-fit: cover;
-  border-radius: 7px;
-
-  position: relative;
-}
 .game__content {
   font-size: 1.2rem;
-  margin: 0;
-  /* temp color */
-  color: #fff;
-
-  height: 100%;
-  width: 100%;
-
-  position: absolute;
-  bottom: 0;
+  color: colors.$neutral-text;
 }
 
 .game__name {
   font-size: 1.2rem;
   font-weight: 500;
-  text-align: center;
+  text-align: left;
 }
 </style>

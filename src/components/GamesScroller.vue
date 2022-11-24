@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, onMounted, onBeforeUnmount } from "vue";
 import GameItem from "../components/GameItem.vue";
 export default {
   name: "GamesScroller",
@@ -14,16 +14,36 @@ export default {
 
   setup(props) {
     const currentSlide = ref(0);
+    const windowWidth = ref(0);
+
+    const getWindowWidth = () => {
+      windowWidth.value = window.innerWidth;
+    };
 
     const gamesFromProps = computed((): any => {
       return props.games;
     });
 
     const gameSlides = computed((): any => {
-      const numberOfGamesPerSlide = Math.ceil(props.games.length / 5);
+      let numberOfGames =
+        windowWidth.value > 1200
+          ? 4
+          : windowWidth.value > 800
+          ? 3
+          : windowWidth.value > 500
+          ? 2
+          : 1;
+      const numberOfGamesPerSlide = Math.ceil(
+        props.games.length / numberOfGames
+      );
       const slides = [];
       for (let i = 0; i < numberOfGamesPerSlide; i++) {
-        slides.push(props.games.slice(i * 5, i * 5 + 5));
+        slides.push(
+          props.games.slice(
+            i * numberOfGames,
+            i * numberOfGames + numberOfGames
+          )
+        );
       }
       return slides;
     });
@@ -40,6 +60,15 @@ export default {
       }
     };
 
+    onMounted(() => {
+      getWindowWidth();
+      window.addEventListener("resize", getWindowWidth);
+    });
+
+    onBeforeUnmount(() => {
+      window.removeEventListener("resize", getWindowWidth);
+    });
+
     return {
       gamesFromProps,
       props,
@@ -47,6 +76,7 @@ export default {
       nextSlide,
       prevSlide,
       currentSlide,
+      windowWidth,
     };
   },
 };
@@ -71,11 +101,25 @@ export default {
       >
         <router-link :to="{ name: 'gameDetails', params: { id: game.id } }">
           <GameItem>
-            <template #name>
-              {{ game.name }}
-            </template>
             <template #image>
-              <img :src="game.background_image" alt="game image" width="200" />
+              <div class="img__wrapper">
+                <img
+                  :src="game.background_image"
+                  alt="game image"
+                  width="200"
+                  class="game__img"
+                />
+              </div>
+            </template>
+            <template #name>
+              <p class="game__name">
+                {{ game.name }}
+              </p>
+            </template>
+            <template #genre>
+              <p class="game__genre">
+                {{ game.genres[0].name }}
+              </p>
             </template>
           </GameItem>
         </router-link>
@@ -114,17 +158,44 @@ h2 {
 
 .games {
   display: flex;
-  gap: 1rem;
+  gap: 1.6rem;
   // overflow: auto;
 }
 
 .game__wrapper {
   width: 100%;
-  // &:nth-last-child(-n + 5) {
-  //   display: none;
-  // }
-  // &:nth-child(1 + 2 * 5) {
-  //   display: none;
-  // }
+  &:hover {
+    .game__img {
+      transform: scale(1.05);
+    }
+  }
+}
+
+.img__wrapper {
+  width: 100%;
+  height: 18.6rem;
+  object-fit: cover;
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.game__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  transition: transform 0.3s ease-in-out;
+}
+
+.game__genre {
+  font-size: 1rem;
+  color: colors.$neutral-text-secondary;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.game__name {
+  font-size: 1.4rem;
+  font-weight: 500;
 }
 </style>
