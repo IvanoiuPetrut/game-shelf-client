@@ -1,10 +1,14 @@
 <script lang="ts">
 import { computed, ref, onMounted, onBeforeUnmount } from "vue";
 import GameItem from "../components/GameItem.vue";
+import IconArrowLeftVue from "../components/icons/IconArrowLeft.vue";
+import IconArrowRightVue from "../components/icons/IconArrowRight.vue";
 export default {
   name: "GamesScroller",
   components: {
     GameItem,
+    IconArrowLeftVue,
+    IconArrowRightVue,
   },
   props: {
     games: {
@@ -89,8 +93,20 @@ export default {
         <slot name="title" class="title">Featured Games</slot>
       </h2>
       <div class="navigation">
-        <button @click="prevSlide">left</button>
-        <button @click="nextSlide">right</button>
+        <button
+          @click="prevSlide"
+          class="btn"
+          :class="{ disabled: currentSlide === 0 }"
+        >
+          <IconArrowLeftVue></IconArrowLeftVue>
+        </button>
+        <button
+          @click="nextSlide"
+          class="btn"
+          :class="{ disabled: currentSlide === gameSlides.length - 1 }"
+        >
+          <IconArrowRightVue></IconArrowRightVue>
+        </button>
       </div>
     </div>
     <div v-if="gamesFromProps.length > 0" class="games">
@@ -159,7 +175,6 @@ h2 {
 .games {
   display: flex;
   gap: 1.6rem;
-  // overflow: auto;
 }
 
 .game__wrapper {
@@ -197,5 +212,14 @@ h2 {
 .game__name {
   font-size: 1.4rem;
   font-weight: 500;
+}
+
+.btn {
+  padding: 0.4rem 0.6rem;
+}
+
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }
 </style>
