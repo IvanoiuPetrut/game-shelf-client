@@ -29,6 +29,12 @@ const router = createRouter({
       name: "register",
       component: () => import("../views/RegisterView.vue"),
     },
+    {
+      path: "/games/categories/:category",
+      name: "category",
+      component: () => import("../views/CategoryView.vue"),
+      props: true,
+    },
   ],
 });
 
