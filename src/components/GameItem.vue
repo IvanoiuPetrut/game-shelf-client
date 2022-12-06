@@ -57,7 +57,6 @@ export default {
   flex-direction: column;
   justify-content: center;
   gap: 0.8rem;
-  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
 }
 
 .game__content {
