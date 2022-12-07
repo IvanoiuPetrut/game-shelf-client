@@ -1,13 +1,19 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const categories = ["Co-op", "Action", "Rpg", "Jrpg"];
+</script>
 
 <template>
   <div class="categories__wrapper">
     <h2>Browse by category</h2>
     <div class="categories">
-      <div class="category btn">Co-op</div>
-      <div class="category btn">Action</div>
-      <div class="category btn">Rpg</div>
-      <div class="category btn">Jrpg</div>
+      <router-link
+        class="btn category"
+        v-for="(category, index) in categories"
+        :key="index"
+        :to="{ name: 'category', params: { category } }"
+      >
+        {{ category }}
+      </router-link>
     </div>
   </div>
 </template>
@@ -23,6 +29,7 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.6rem;
+
   @media (min-width: 600px) {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -43,6 +50,10 @@
   text-transform: uppercase;
   width: 80%;
   justify-self: center;
+
+  a {
+    color: colors.$neutral-text;
+  }
 
   @media (min-width: 600px) {
     &:nth-child(1) {
