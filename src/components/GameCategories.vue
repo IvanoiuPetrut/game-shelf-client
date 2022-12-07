@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const categories = ["Co-op", "Action", "Rpg", "Jrpg"];
+const categories = ["co-op", "action", "rpg", "jrpg"];
 </script>
 
 <template>

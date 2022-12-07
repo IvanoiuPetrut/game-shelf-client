@@ -128,14 +128,10 @@ export default {
               </div>
             </template>
             <template #name>
-              <p class="game__name">
-                {{ game.name }}
-              </p>
+              {{ game.name }}
             </template>
             <template #genre>
-              <p class="game__genre">
-                {{ game.genres[0].name }}
-              </p>
+              {{ game.genres[0].name }}
             </template>
           </GameItem>
         </router-link>
@@ -196,18 +192,6 @@ export default {
   object-fit: cover;
 
   transition: transform 0.3s ease-in-out;
-}
-
-.game__genre {
-  font-size: 1rem;
-  color: colors.$neutral-text-secondary;
-  text-transform: uppercase;
-  font-weight: 500;
-}
-
-.game__name {
-  font-size: 1.4rem;
-  font-weight: 500;
 }
 
 .btn {
