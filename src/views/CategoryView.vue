@@ -3,6 +3,7 @@ import { ref, watch } from "vue";
 import axios from "axios";
 import { API_URL } from "@/api";
 import GameItem from "@/components/GameItem.vue";
+import GameFilters from "@/components/GameFilters.vue";
 
 const props = defineProps<{
   category: string;
@@ -11,6 +12,8 @@ const props = defineProps<{
 const gameQuery = ref("");
 const games = ref<any[]>([]);
 // const genres = ref;
+const platforms = ref<any>("no");
+const testLabel = ref<any>("");
 
 const fetchGames = async () => {
   axios
@@ -18,6 +21,7 @@ const fetchGames = async () => {
       params: {
         search: gameQuery.value,
         genres: props.category,
+        platforms: "1",
       },
     })
     .then((response) => {
@@ -41,6 +45,16 @@ watch(gameQuery, () => {
     <li>Genres {{ props.category }}</li>
     <li v-if="gameQuery.length > 0">Results for {{ gameQuery }}</li>
   </ul>
+  {{ platforms }}
+  <input
+    type="checkbox"
+    id="action"
+    v-model="platforms"
+    true-value="yes"
+    false-value="no"
+  />
+  {{ testLabel }}
+  <GameFilters label="Action" v-model="testLabel"></GameFilters>
   <div class="games">
     <router-link
       v-for="game in games"
