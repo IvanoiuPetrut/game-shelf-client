@@ -4,6 +4,7 @@ import axios from "axios";
 import { API_URL } from "@/api";
 import GameItem from "@/components/GameItem.vue";
 import GameFilters from "@/components/GameFilters.vue";
+import IconSearchNormal from "@/components/icons/IconSearchNormal.vue";
 
 const props = defineProps<{
   category: string;
@@ -105,8 +106,18 @@ watch(
 
 <template>
   <div class="wrapper">
-    <input class="game__input" type="text" v-model="gameQuery" />
-    <p class="game__number">Showing {3821} games</p>
+    <div class="header">
+      <div class="input__wrapper">
+        <input
+          class="game__input"
+          type="text"
+          placeholder="Search by title"
+          v-model="gameQuery"
+        />
+        <IconSearchNormal class="icon" />
+      </div>
+      <p class="game__count">Showing {{ games.length }} games</p>
+    </div>
 
     <div class="grid">
       <aside class="filters" :class="{ active: areFiltersActive }">
@@ -170,14 +181,36 @@ watch(
   @include component.container;
 }
 
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-bottom: 2.4rem;
+
+  @media (min-width: 750px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  @media (min-width: 1000px) {
+    // margin-bottom: 4.8rem;
+    padding: 0 0 2.4rem 0;
+    border-bottom: 2px solid colors.$neutral-text-secondary;
+  }
+}
+
+.game__count {
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
 .grid {
   display: grid;
   @media (min-width: 1000px) {
     grid-template-columns: 1fr 4fr;
     column-gap: 2rem;
   }
-  // grid-template-columns: 1fr 4fr;
-  // column-gap: 2rem;
 }
 
 .filters {
@@ -255,15 +288,46 @@ watch(
   }
 }
 
+.input__wrapper {
+  position: relative;
+}
+
+.icon {
+  position: absolute;
+  bottom: 50%;
+  transform: translateY(50%);
+  left: 0.6rem;
+  color: colors.$neutral-text-secondary;
+  z-index: 999;
+
+  transition: all 0.3s ease-in-out;
+}
+
 .game__input {
   width: 100%;
-  padding: 0.6rem;
+  padding: 0.6rem 0.6rem 0.6rem 2.4rem;
   border-radius: 100px;
-  border: none;
-  margin-bottom: 1.2rem;
+  border: 2px solid colors.$neutral-text-secondary;
+  background-color: colors.$neutral-bg-secondary;
+  color: colors.$neutral-text;
+  font-size: 1rem;
+  transition: all 0.3s ease-in-out;
+
+  &::placeholder {
+    color: colors.$neutral-text-secondary;
+  }
 
   &:focus {
     outline: none;
+    border: 2px solid colors.$accent;
+  }
+
+  &:focus ~ .icon {
+    color: colors.$accent;
+  }
+
+  @media (min-width: 750px) {
+    width: 150%;
   }
 }
 
