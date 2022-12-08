@@ -171,7 +171,11 @@ watch(
 }
 
 .grid {
-  // display: grid;
+  display: grid;
+  @media (min-width: 1000px) {
+    grid-template-columns: 1fr 4fr;
+    column-gap: 2rem;
+  }
   // grid-template-columns: 1fr 4fr;
   // column-gap: 2rem;
 }
@@ -190,6 +194,14 @@ watch(
   overflow: auto;
   z-index: 99;
 
+  @media (min-width: 1000px) {
+    position: static;
+    width: 100%;
+    height: auto;
+    background: none;
+    padding: 0;
+  }
+
   .btn {
     position: fixed;
     bottom: 5%;
@@ -198,6 +210,10 @@ watch(
     width: min(30%, 8.4rem);
     letter-spacing: 0.1rem;
     z-index: 999;
+
+    @media (min-width: 1000px) {
+      display: none;
+    }
   }
 }
 
@@ -222,15 +238,21 @@ watch(
 }
 
 .active {
-  // top: 0;
   left: 0;
 }
 
 .games {
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
   row-gap: 3.2rem;
   column-gap: 2rem;
+
+  @media (min-width: 550px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1300px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .game__input {

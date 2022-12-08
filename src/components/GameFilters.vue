@@ -51,6 +51,7 @@ const valueOfCheckBox = ref(props.modelValue);
 }
 .form__label {
   font-size: 1.2rem;
+  color: colors.$neutral-text-secondary;
   &:hover {
     cursor: pointer;
     color: colors.$accent;
