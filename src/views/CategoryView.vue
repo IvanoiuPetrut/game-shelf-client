@@ -87,6 +87,13 @@ const fetchGames = async () => {
     });
 };
 
+const areFiltersActive = ref(false);
+
+const toggleFilters = () => {
+  areFiltersActive.value = !areFiltersActive.value;
+  console.log(areFiltersActive.value);
+};
+
 watch(
   [gameQuery, platforms, genres, tags],
   () => {
@@ -97,70 +104,145 @@ watch(
 </script>
 
 <template>
-  {{ props.category }}
-  <p>Showing {3821} games</p>
-  <input type="text" v-model="gameQuery" />
-  <ul>
-    <li>Genres {{ props.category }}</li>
-    <li v-if="gameQuery.length > 0">Results for {{ gameQuery }}</li>
-  </ul>
+  <div class="wrapper">
+    <input class="game__input" type="text" v-model="gameQuery" />
+    <p class="game__number">Showing {3821} games</p>
 
-  <div>
-    <p>Stores</p>
-    <GameFilters
-      v-for="store in stores"
-      :key="store.id"
-      :label="store.name"
-      v-model="store.checked"
-    ></GameFilters>
-  </div>
-
-  <div>
-    <p>Tags</p>
-    <GameFilters
-      v-for="tag in tags"
-      :key="tag.id"
-      :label="tag.name"
-      v-model="tag.checked"
-    ></GameFilters>
-  </div>
-
-  <div>
-    <p>Genres</p>
-    <GameFilters
-      v-for="genre in genres"
-      :key="genre.id"
-      :label="genre.name"
-      v-model="genre.checked"
-    ></GameFilters>
-  </div>
-
-  <div>
-    <p>Platforms</p>
-    <GameFilters
-      v-for="platform in platforms"
-      :key="platform.id"
-      :label="platform.name"
-      v-model="platform.checked"
-    ></GameFilters>
-  </div>
-  <div class="games">
-    <router-link
-      v-for="game in games"
-      :key="game.id"
-      :to="{ name: 'gameDetails', params: { id: game.id } }"
-    >
-      <GameItem :gameId="game.id" />
-    </router-link>
+    <div class="grid">
+      <aside class="filters" :class="{ active: areFiltersActive }">
+        <div class="filters__field">
+          <h4 class="filters__title">Filters</h4>
+          <p class="filters__type">Stores</p>
+          <GameFilters
+            v-for="store in stores"
+            :key="store.id"
+            :label="store.name"
+            v-model="store.checked"
+          ></GameFilters>
+        </div>
+        <div class="filters__field">
+          <p class="filters__type">Tags</p>
+          <GameFilters
+            v-for="tag in tags"
+            :key="tag.id"
+            :label="tag.name"
+            v-model="tag.checked"
+          ></GameFilters>
+        </div>
+        <div class="filters__field">
+          <p class="filters__type">Genres</p>
+          <GameFilters
+            v-for="genre in genres"
+            :key="genre.id"
+            :label="genre.name"
+            v-model="genre.checked"
+          ></GameFilters>
+        </div>
+        <div class="filters__field--last">
+          <p class="filters__type">Platforms</p>
+          <GameFilters
+            v-for="platform in platforms"
+            :key="platform.id"
+            :label="platform.name"
+            v-model="platform.checked"
+          ></GameFilters>
+        </div>
+        <button class="btn" @click="toggleFilters">Filters</button>
+      </aside>
+      <main class="games">
+        <router-link
+          v-for="game in games"
+          :key="game.id"
+          :to="{ name: 'gameDetails', params: { id: game.id } }"
+        >
+          <GameItem :gameId="game.id" />
+        </router-link>
+      </main>
+    </div>
   </div>
 </template>
 
 <style scope lang="scss">
+@use "@/assets/style/component.scss" as component;
+@use "@/assets/style/colors.scss" as colors;
+
+.wrapper {
+  @include component.container;
+}
+
+.grid {
+  // display: grid;
+  // grid-template-columns: 1fr 4fr;
+  // column-gap: 2rem;
+}
+
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.2rem 2.4rem;
+  position: fixed;
+  top: 0;
+  left: -110%;
+  background: colors.$neutral-gradient;
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
+  z-index: 99;
+
+  .btn {
+    position: fixed;
+    bottom: 5%;
+    right: 50%;
+    transform: translateX(50%);
+    width: 20%;
+    letter-spacing: 0.1rem;
+    z-index: 999;
+  }
+}
+
+.filters__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.filters__field--last {
+  margin-bottom: 5rem;
+}
+
+.filters__type {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.form__label {
+  font-weight: 500;
+}
+
+.active {
+  // top: 0;
+  left: 0;
+}
+
 .games {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   row-gap: 3.2rem;
   column-gap: 2rem;
+}
+
+.game__input {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 100px;
+  border: none;
+  margin-bottom: 1.2rem;
+
+  &:focus {
+    outline: none;
+  }
 }
 
 .game__img {

@@ -34,7 +34,11 @@ nav {
   text-align: center;
   background-color: colors.$neutral-bg-secondary;
   padding: 1rem 0;
-  margin-bottom: 3.2rem;
+  margin-bottom: 1.6rem;
+  @media (min-width: 768px) {
+    padding: 1.6rem 0;
+    margin-bottom: 3.2rem;
+  }
 }
 
 nav a.router-link-exact-active {
