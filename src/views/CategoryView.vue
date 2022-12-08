@@ -11,9 +11,17 @@ const props = defineProps<{
 
 const gameQuery = ref("");
 const games = ref<any[]>([]);
-// const genres = ref;
-const platforms = ref<any>("no");
-const testLabel = ref<any>("");
+const testLabel = ref(true);
+const platforms = ref<any[]>([
+  { id: 4, name: "PC", checked: true },
+  { id: 1, name: "Xbox", checked: false },
+  { id: 6, name: "Linux", checked: false },
+  { id: 7, name: "Nintendo-Switch", checked: false },
+  { id: 8, name: "Nintendo-3DS", checked: false },
+  { id: 187, name: "Playstation 5", checked: false },
+  { id: 18, name: "Playstation 4", checked: false },
+  { id: 16, name: "Playstation 3", checked: false },
+]);
 
 const fetchGames = async () => {
   axios
@@ -21,20 +29,30 @@ const fetchGames = async () => {
       params: {
         search: gameQuery.value,
         genres: props.category,
-        platforms: "1",
+        platforms: platforms.value
+          .filter((platform) => platform.checked)
+          .map((platform) => platform.id)
+          .join(","),
       },
     })
     .then((response) => {
-      console.log(response.data.results);
       games.value = response.data.results;
-      // console.log(games.value);
+      console.log(response.data);
     });
 };
 
-watch(gameQuery, () => {
-  console.log("gameQuery changed");
-  fetchGames();
-});
+// watch(gameQuery, () => {
+//   fetchGames();
+// });
+
+//watch gameQuery and platforms
+watch(
+  [gameQuery, platforms],
+  () => {
+    fetchGames();
+  },
+  { deep: true }
+);
 </script>
 
 <template>
@@ -45,16 +63,15 @@ watch(gameQuery, () => {
     <li>Genres {{ props.category }}</li>
     <li v-if="gameQuery.length > 0">Results for {{ gameQuery }}</li>
   </ul>
-  {{ platforms }}
-  <input
-    type="checkbox"
-    id="action"
-    v-model="platforms"
-    true-value="yes"
-    false-value="no"
-  />
   {{ testLabel }}
-  <GameFilters label="Action" v-model="testLabel"></GameFilters>
+  <GameFilters label="Action" v-model="testLabel" is></GameFilters>
+
+  <GameFilters
+    v-for="platform in platforms"
+    :key="platform.id"
+    :label="platform.name"
+    v-model="platform.checked"
+  ></GameFilters>
   <div class="games">
     <router-link
       v-for="game in games"

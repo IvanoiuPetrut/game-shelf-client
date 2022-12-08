@@ -22,7 +22,7 @@ import axios from "axios";
 export default {
   name: "GameItem",
   props: {
-    gameId: String,
+    gameId: [String, Number],
   },
   setup(props) {
     const gameName = ref("Fallout 3");

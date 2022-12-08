@@ -1,22 +1,16 @@
 <script lang="ts" setup>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 
-defineProps({
-  label: {
-    type: String,
-    default: "",
-  },
-  modelValue: {
-    type: [String, Number],
-    default: "",
-  },
-  isChecked: {
-    type: Boolean,
-    default: false,
-  },
-});
+const props = defineProps<{
+  label: string;
+  modelValue: boolean;
+  // isCheckbox: {
+  //   type: boolean;
+  //   default: false;
+  // };
+}>();
 
-const valueOfCheckbox = ref<any>(1);
+const valueOfCheckBox = ref(props.modelValue);
 </script>
 
 <template>
@@ -28,10 +22,10 @@ const valueOfCheckbox = ref<any>(1);
         class="form__input"
         v-bind="$attrs"
         :id="label"
-        true-value="1"
-        false-value="0"
-        v-model="valueOfCheckbox"
-        @input="$emit('update:modelValue', valueOfCheckbox)"
+        :true-value="true"
+        :false-value="false"
+        v-model="valueOfCheckBox"
+        @input="$emit('update:modelValue', valueOfCheckBox)"
       />
     </div>
   </div>
