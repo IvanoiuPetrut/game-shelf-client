@@ -12,6 +12,7 @@ const props = defineProps<{
 
 const gameQuery = ref("");
 const games = ref<any[]>([]);
+const sortBy = ref("nothing");
 const platforms = ref<any[]>([
   { id: 4, name: "PC", checked: true },
   { id: 1, name: "Xbox", checked: false },
@@ -54,6 +55,31 @@ const stores = ref<any[]>([
   { id: 6, name: "Nintendo Store", checked: false },
   { id: 11, name: "Epic Games", checked: false },
 ]);
+
+const sortGamesByScore = () => {
+  games.value.sort((a, b) => b.rating - a.rating);
+  sortBy.value = "Best score";
+};
+
+const sortGamesByTitle = () => {
+  games.value.sort((a, b) => (a.name > b.name ? 1 : -1));
+  sortBy.value = "Title (A to Z)";
+};
+
+const sortGamesByTitleReverse = () => {
+  games.value.sort((a, b) => (a.name < b.name ? 1 : -1));
+  sortBy.value = "Title (Z to A)";
+};
+
+const sortGamesByReleaseDate = () => {
+  games.value.sort((a, b) => (a.released > b.released ? 1 : -1));
+  sortBy.value = "Release date (newest)";
+};
+
+const sortGamesByReleaseDateReverse = () => {
+  games.value.sort((a, b) => (a.released < b.released ? 1 : -1));
+  sortBy.value = "Release date (oldest)";
+};
 
 const fetchGames = async () => {
   axios
@@ -99,6 +125,7 @@ watch(
   [gameQuery, platforms, genres, tags],
   () => {
     fetchGames();
+    sortBy.value = "nothing";
   },
   { deep: true }
 );
@@ -117,6 +144,25 @@ watch(
         <IconSearchNormal class="icon" />
       </div>
       <p class="game__count">Showing {{ games.length }} games</p>
+    </div>
+
+    <div class="sort__wrapper">
+      <button class="btn">
+        Sort by: <span class="sort-by">{{ sortBy }}</span>
+      </button>
+      <div class="sort__options">
+        <button @click="sortGamesByScore" class="btn">Best score</button>
+        <button @click="sortGamesByTitle" class="btn">Title (A to Z)</button>
+        <button @click="sortGamesByTitleReverse" class="btn">
+          Title (Z to A)
+        </button>
+        <button @click="sortGamesByReleaseDate" class="btn">
+          Release date (newest)
+        </button>
+        <button @click="sortGamesByReleaseDateReverse" class="btn">
+          Release date (oldest)
+        </button>
+      </div>
     </div>
 
     <div class="grid">
@@ -333,5 +379,16 @@ watch(
 
 .game__img {
   width: 100%;
+}
+
+.sort__wrapper {
+  .btn {
+    font-size: 1rem;
+    background-color: transparent;
+  }
+}
+
+.sort-by {
+  color: colors.$accent;
 }
 </style>
