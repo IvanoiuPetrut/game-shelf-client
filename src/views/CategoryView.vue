@@ -195,7 +195,7 @@ watch(
     bottom: 5%;
     right: 50%;
     transform: translateX(50%);
-    width: 20%;
+    width: min(30%, 8.4rem);
     letter-spacing: 0.1rem;
     z-index: 999;
   }
