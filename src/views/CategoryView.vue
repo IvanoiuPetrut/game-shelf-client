@@ -146,25 +146,6 @@ watch(
       <p class="game__count">Showing {{ games.length }} games</p>
     </div>
 
-    <div class="sort__wrapper">
-      <button class="btn">
-        Sort by: <span class="sort-by">{{ sortBy }}</span>
-      </button>
-      <div class="sort__options">
-        <button @click="sortGamesByScore" class="btn">Best score</button>
-        <button @click="sortGamesByTitle" class="btn">Title (A to Z)</button>
-        <button @click="sortGamesByTitleReverse" class="btn">
-          Title (Z to A)
-        </button>
-        <button @click="sortGamesByReleaseDate" class="btn">
-          Release date (newest)
-        </button>
-        <button @click="sortGamesByReleaseDateReverse" class="btn">
-          Release date (oldest)
-        </button>
-      </div>
-    </div>
-
     <div class="grid">
       <aside class="filters" :class="{ active: areFiltersActive }">
         <div class="filters__field">
@@ -206,14 +187,36 @@ watch(
         </div>
         <button class="btn" @click="toggleFilters">Filters</button>
       </aside>
-      <main class="games">
-        <router-link
-          v-for="game in games"
-          :key="game.id"
-          :to="{ name: 'gameDetails', params: { id: game.id } }"
-        >
-          <GameItem :gameId="game.id" />
-        </router-link>
+      <main>
+        <div class="sort__wrapper">
+          <button class="btn btn--hover">
+            Sort by: <span class="sort-by">{{ sortBy }}</span>
+          </button>
+          <div class="sort__options">
+            <button @click="sortGamesByScore" class="btn">Best score</button>
+            <button @click="sortGamesByTitle" class="btn">
+              Title (A to Z)
+            </button>
+            <button @click="sortGamesByTitleReverse" class="btn">
+              Title (Z to A)
+            </button>
+            <button @click="sortGamesByReleaseDate" class="btn">
+              Release date (newest)
+            </button>
+            <button @click="sortGamesByReleaseDateReverse" class="btn">
+              Release date (oldest)
+            </button>
+          </div>
+        </div>
+        <div class="games">
+          <router-link
+            v-for="game in games"
+            :key="game.id"
+            :to="{ name: 'gameDetails', params: { id: game.id } }"
+          >
+            <GameItem :gameId="game.id" />
+          </router-link>
+        </div>
       </main>
     </div>
   </div>
@@ -382,13 +385,57 @@ watch(
 }
 
 .sort__wrapper {
+  margin-bottom: 1.6rem;
+
   .btn {
     font-size: 1rem;
     background-color: transparent;
+
+    &:hover {
+      background-color: colors.$neutral-bg-secondary;
+    }
+  }
+
+  .btn--hover {
+    font-size: 1.2rem;
+    border: 1px solid colors.$accent;
+    &:hover ~ .sort__options {
+      opacity: 1;
+      pointer-events: auto;
+    }
   }
 }
 
 .sort-by {
   color: colors.$accent;
+}
+
+.sort__options {
+  background-color: colors.$neutral-bg-secondary;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0.5rem;
+  gap: 0.2rem;
+  position: absolute;
+  border-radius: 7px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.15s ease-in-out;
+  z-index: 999;
+
+  &:hover {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .btn {
+    width: 100%;
+    text-align: start;
+
+    &:hover {
+      background-color: colors.$accent-transparent;
+    }
+  }
 }
 </style>
