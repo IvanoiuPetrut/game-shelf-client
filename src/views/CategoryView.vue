@@ -21,6 +21,7 @@ const platforms = ref<any[]>([
   { id: 18, name: "Playstation 4", checked: false },
   { id: 16, name: "Playstation 3", checked: false },
 ]);
+
 const genres = ref<any[]>([
   { id: 4, name: "Action", checked: false },
   { id: 51, name: "Indie", checked: false },
@@ -35,12 +36,22 @@ const genres = ref<any[]>([
   { id: 1, name: "Racing", checked: false },
   { id: 15, name: "Sports", checked: false },
 ]);
+
 const tags = ref<any[]>([
   { id: 31, name: "Singleplayer", checked: false },
   { id: 7, name: "Multiplayer", checked: false },
   { id: 13, name: "Atmosferic", checked: false },
   { id: 42, name: "Great Soundtrack", checked: false },
   { id: 18, name: "Co-op", checked: false },
+]);
+
+const stores = ref<any[]>([
+  { id: 1, name: "Steam", checked: false },
+  { id: 2, name: "Xbox Store", checked: false },
+  { id: 3, name: "Playstation Store", checked: false },
+  { id: 5, name: "GOG", checked: false },
+  { id: 6, name: "Nintendo Store", checked: false },
+  { id: 11, name: "Epic Games", checked: false },
 ]);
 
 const fetchGames = async () => {
@@ -62,6 +73,11 @@ const fetchGames = async () => {
           tags.value
             .filter((tag) => tag.checked)
             .map((tag) => tag.id)
+            .join(",") || null,
+        stores:
+          stores.value
+            .filter((store) => store.checked)
+            .map((store) => store.id)
             .join(",") || null,
       },
     })
@@ -88,6 +104,16 @@ watch(
     <li>Genres {{ props.category }}</li>
     <li v-if="gameQuery.length > 0">Results for {{ gameQuery }}</li>
   </ul>
+
+  <div>
+    <p>Stores</p>
+    <GameFilters
+      v-for="store in stores"
+      :key="store.id"
+      :label="store.name"
+      v-model="store.checked"
+    ></GameFilters>
+  </div>
 
   <div>
     <p>Tags</p>
