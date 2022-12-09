@@ -18,13 +18,15 @@ const gameBackgroundImage = computed((): any => {
     <div class="hero__section--description">
       <h1 class="hero__title">Game Shelf</h1>
       <p class="hero__description">
-        Social environment for gamers to share their thoughts on games, keep
-        track of their <strong>gamer's journey</strong>, find new games to play,
-        and more.
+        Game Shelf is a <strong>community for gamers</strong> to share their
+        thoughts on games and keep track of their game progression. With our
+        platform, you can connect with other gamers, share your opinions, and
+        discover new games to play. Whether you're a casual or hardcore gamer,
+        Game Shelf has something for everyone.
       </p>
       <RouterLink to="/register">
         <BaseButton class="btn--cta">
-          <template #text> Sign Up for Free </template>
+          <template #text> Join the community </template>
         </BaseButton>
       </RouterLink>
     </div>
