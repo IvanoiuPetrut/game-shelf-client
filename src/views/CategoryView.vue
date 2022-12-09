@@ -229,7 +229,7 @@ onMounted(() => {
   </div>
 </template>
 
-<style scope lang="scss">
+<style scoped lang="scss">
 @use "@/assets/style/component.scss" as component;
 @use "@/assets/style/colors.scss" as colors;
 
