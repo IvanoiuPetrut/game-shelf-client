@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 import axios from "axios";
 import { API_URL } from "@/api";
 import GameItem from "@/components/GameItem.vue";
@@ -25,18 +25,18 @@ const platforms = ref<any[]>([
 ]);
 
 const genres = ref<any[]>([
-  { id: 4, name: "Action", checked: false },
-  { id: 51, name: "Indie", checked: false },
-  { id: 3, name: "Adventure", checked: false },
-  { id: 5, name: "RPG", checked: false },
-  { id: 10, name: "Strategy", checked: false },
-  { id: 2, name: "Shooter", checked: false },
-  { id: 40, name: "Casual", checked: false },
-  { id: 7, name: "Puzzle", checked: false },
-  { id: 11, name: "Arcade", checked: false },
-  { id: 83, name: "Platformer", checked: false },
-  { id: 1, name: "Racing", checked: false },
-  { id: 15, name: "Sports", checked: false },
+  { id: 4, name: "Action", checked: props.category === "action" },
+  { id: 51, name: "Indie", checked: props.category === "indie" },
+  { id: 3, name: "Adventure", checked: props.category === "adventure" },
+  { id: 5, name: "RPG", checked: props.category === "rpg" },
+  { id: 10, name: "Strategy", checked: props.category === "strategy" },
+  { id: 2, name: "Shooter", checked: props.category === "shooter" },
+  { id: 40, name: "Casual", checked: props.category === "casual" },
+  { id: 7, name: "Puzzle", checked: props.category === "puzzle" },
+  { id: 11, name: "Arcade", checked: props.category === "arcade" },
+  { id: 83, name: "Platformer", checked: props.category === "platformer" },
+  { id: 1, name: "Racing", checked: props.category === "racing" },
+  { id: 15, name: "Sports", checked: props.category === "sports" },
 ]);
 
 const tags = ref<any[]>([
@@ -72,12 +72,12 @@ const sortGamesByTitleReverse = () => {
 };
 
 const sortGamesByReleaseDate = () => {
-  games.value.sort((a, b) => (a.released > b.released ? 1 : -1));
+  games.value.sort((a, b) => (a.released < b.released ? 1 : -1));
   sortBy.value = "Release date (newest)";
 };
 
 const sortGamesByReleaseDateReverse = () => {
-  games.value.sort((a, b) => (a.released < b.released ? 1 : -1));
+  games.value.sort((a, b) => (a.released > b.released ? 1 : -1));
   sortBy.value = "Release date (oldest)";
 };
 
@@ -129,6 +129,10 @@ watch(
   },
   { deep: true }
 );
+
+onMounted(() => {
+  fetchGames();
+});
 </script>
 
 <template>
@@ -208,7 +212,7 @@ watch(
             </button>
           </div>
         </div>
-        <div class="games">
+        <div v-if="games.length > 0" class="games">
           <router-link
             v-for="game in games"
             :key="game.id"
@@ -216,6 +220,9 @@ watch(
           >
             <GameItem :gameId="game.id" />
           </router-link>
+        </div>
+        <div v-else class="games__no-result">
+          <p>No results found</p>
         </div>
       </main>
     </div>
@@ -243,7 +250,6 @@ watch(
   }
 
   @media (min-width: 1000px) {
-    // margin-bottom: 4.8rem;
     padding: 0 0 2.4rem 0;
     border-bottom: 2px solid colors.$neutral-text-secondary;
   }
@@ -334,6 +340,19 @@ watch(
 
   @media (min-width: 1300px) {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  &__no-result {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+
+    p {
+      color: colors.$neutral-text-secondary;
+      font-size: 2.4rem;
+      font-weight: 500;
+    }
   }
 }
 
