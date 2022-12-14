@@ -12,42 +12,64 @@ const toggleMobileNav = () => {
 </script>
 
 <template>
-  <nav class="nav">
-    <div class="nav__left">
-      <RouterLink to="/" class="nav__logo"> <IconBook /> GameShelf </RouterLink>
-    </div>
-    <button class="nav__burger btn" @click="toggleMobileNav">
-      <IconMenu />
-    </button>
-    <div
-      class="nav__right"
-      :class="{ 'nav__right--visible': isMobileNavVisible }"
-    >
-      <router-link :to="{ name: 'category', params: { category: 'default' } }">
-        Categories
-      </router-link>
-      <router-link :to="{ name: 'about' }">About</router-link>
-      <router-link :to="{ name: 'register' }">Register</router-link>
+  <div class="nav__wrapper">
+    <nav class="nav">
+      <div class="nav__left">
+        <RouterLink to="/" class="nav__logo">
+          <IconBook /> GameShelf
+        </RouterLink>
+      </div>
+      <button class="nav__burger btn" @click="toggleMobileNav">
+        <IconMenu />
+      </button>
+      <div
+        class="nav__right"
+        :class="{ 'nav__right--visible': isMobileNavVisible }"
+      >
+        <router-link
+          :to="{ name: 'category', params: { category: 'default' } }"
+        >
+          Categories
+        </router-link>
+        <router-link :to="{ name: 'about' }">About</router-link>
+        <router-link :to="{ name: 'register' }">Register</router-link>
 
-      <!-- <router-link :to="{ name: 'login' }">Login</router-link> -->
-    </div>
-  </nav>
+        <!-- <router-link :to="{ name: 'login' }">Login</router-link> -->
+      </div>
+    </nav>
+  </div>
 </template>
 
 <style lang="scss" scoped>
 @use "@/assets/style/colors.scss" as colors;
 @use "@/assets/style/component.scss" as component;
-.nav {
+
+.nav__wrapper {
   @include component.container;
+  background-color: colors.$neutral-bg-secondary;
+  max-width: 100%;
+
+  @media (min-width: 1000px) {
+    // padding: 0 12.8rem;
+  }
+}
+.nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1.6rem;
-  background-color: colors.$neutral-bg-secondary;
   width: 100%;
-  // padding: 1rem 10.8rem;
+  padding: 0.4rem 0;
   margin-bottom: 2.4rem;
   position: relative;
+
+  @media (min-width: 800px) {
+    margin-bottom: 3.2rem;
+  }
+
+  @media (min-width: 1000px) {
+    margin-bottom: 4rem;
+  }
 
   &__right {
     display: flex;
@@ -66,9 +88,24 @@ const toggleMobileNav = () => {
     pointer-events: none;
     transition: opacity 0.15s ease-in-out;
 
+    @media (min-width: 800px) {
+      flex-direction: row;
+      z-index: 0;
+      position: relative;
+      opacity: 1;
+      padding: 0;
+      pointer-events: auto;
+    }
+
     &--visible {
       opacity: 1;
       pointer-events: auto;
+    }
+  }
+
+  &__burger {
+    @media (min-width: 800px) {
+      display: none;
     }
   }
 
