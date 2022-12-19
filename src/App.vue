@@ -4,6 +4,7 @@ import { onBeforeMount } from "vue";
 import { useGamesTopCriticsStore } from "@/stores/games-top-critics";
 import HeaderItem from "./components/HeaderItem.vue";
 import BaseNav from "./components/BaseNav.vue";
+import BaseFooter from "./components/BaseFooter.vue";
 
 const store = useGamesTopCriticsStore();
 
@@ -20,6 +21,7 @@ onBeforeMount(() => {
   </header>
 
   <RouterView />
+  <BaseFooter />
 </template>
 
 <style lang="scss" scoped>
