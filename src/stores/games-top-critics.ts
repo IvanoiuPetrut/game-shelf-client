@@ -11,7 +11,7 @@ export const useGamesTopCriticsStore = defineStore("gamesTopCritics", {
   actions: {
     async fetchGames() {
       axios
-        .get(API_URL, {
+        .get(`${API_URL}/games`, {
           params: {
             ordering: "-metacritic",
             platforms: "1",

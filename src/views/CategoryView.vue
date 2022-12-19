@@ -83,7 +83,7 @@ const sortGamesByReleaseDateReverse = () => {
 
 const fetchGames = async () => {
   axios
-    .get(API_URL, {
+    .get(`${API_URL}/games`, {
       params: {
         search: gameQuery.value,
         genres:

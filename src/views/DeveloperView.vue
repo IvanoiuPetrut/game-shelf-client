@@ -9,11 +9,24 @@ const props = defineProps<{
 }>();
 
 const games = ref<any[]>([]);
+const developerDetails = ref<any>({});
+
+const fetchDeveloperDetails = async () => {
+  axios
+    .get(`${API_URL}/developers/${props.developer}`)
+    .then((response) => {
+      developerDetails.value = response.data;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 
 const fetchGames = async () => {
   axios
-    .get(API_URL, {
+    .get(`${API_URL}/games`, {
       params: {
+        ordering: "-metacritic",
         developers: props.developer,
       },
     })
@@ -27,12 +40,13 @@ const fetchGames = async () => {
 
 onMounted(() => {
   fetchGames();
+  fetchDeveloperDetails();
 });
 </script>
 
 <template>
   <div class="wrapper">
-    <h1>Games made by {{ props.developer }}</h1>
+    <h1>Games made by {{ developerDetails.name }}</h1>
     <div v-if="games.length > 0" class="games">
       <router-link
         v-for="game in games"
@@ -51,6 +65,10 @@ onMounted(() => {
 
 .wrapper {
   @include component.container;
+}
+
+h1 {
+  margin-bottom: 3.2rem;
 }
 .games {
   display: grid;

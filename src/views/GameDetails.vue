@@ -40,10 +40,10 @@ const gameDescription = computed(() => {
 
 const fetchGameDetails = async () => {
   Promise.all([
-    axios.get(`${API_URL}/${props.id}`),
-    axios.get(`${API_URL}/${props.id}/screenshots`),
-    axios.get(`${API_URL}/${props.id}/movies`),
-    axios.get(`${API_URL}/${props.id}/stores`),
+    axios.get(`${API_URL}/games/${props.id}`),
+    axios.get(`${API_URL}/games/${props.id}/screenshots`),
+    axios.get(`${API_URL}/games/${props.id}/movies`),
+    axios.get(`${API_URL}/games/${props.id}/stores`),
   ]).then((response) => {
     game.value = response[0].data;
     gameScreenshots.value = response[1].data.results;
