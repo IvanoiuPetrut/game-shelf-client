@@ -35,6 +35,12 @@ const router = createRouter({
       component: () => import("../views/CategoryView.vue"),
       props: true,
     },
+    {
+      path: "/developer/:developer",
+      name: "developer",
+      component: () => import("../views/DeveloperView.vue"),
+      props: true,
+    },
   ],
 });
 
