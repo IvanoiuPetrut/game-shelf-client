@@ -90,7 +90,15 @@ onMounted(() => {
           <div class="game__release">
             <div class="release__field">
               <p class="release__type">Developer</p>
-              <p class="release__value">{{ game.developers[0].name }}</p>
+              <router-link
+                class="release__value"
+                :to="{
+                  name: 'developer',
+                  params: { developer: game.developers[0].id },
+                }"
+              >
+                {{ game.developers[0].name }}
+              </router-link>
             </div>
             <div class="release__field">
               <p class="release__type">Publisher</p>
