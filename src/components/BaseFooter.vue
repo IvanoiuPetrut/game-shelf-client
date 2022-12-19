@@ -43,23 +43,25 @@ import IconBook from "./icons/IconBook.vue";
         </div>
         <div class="span--2">
           <h3>GameShelf</h3>
-          <p>
-            GameShelf is a project created by
-            <a
-              href="
-          https://www.linkedin.com/in/andrew-mcintosh-5b1b3b1b1/
-          "
-              target="_blank"
-              >Petrut</a
-            >
-          </p>
-          <p>
-            See my projects on my <a href="#" target="_blank">Github Page</a>
-          </p>
-          <p>
-            Source of data is
-            <a href="https://rawg.io/" target="_blank">RAWG</a>
-          </p>
+          <div class="description">
+            <p>
+              GameShelf is a project created by
+              <a
+                href="
+            https://www.linkedin.com/in/andrew-mcintosh-5b1b3b1b1/
+            "
+                target="_blank"
+                >Petrut</a
+              >
+            </p>
+            <p>
+              See my projects on my <a href="#" target="_blank">Github Page</a>
+            </p>
+            <p>
+              Source of data is
+              <a href="https://rawg.io/" target="_blank">RAWG</a>
+            </p>
+          </div>
         </div>
       </div>
       <p class="coppyright">&copy; 2022 GameShelf. All rights reserved.</p>
@@ -107,6 +109,10 @@ import IconBook from "./icons/IconBook.vue";
       bottom: -4px;
     }
   }
+}
+
+.description {
+  color: colors.$neutral-text-secondary;
 }
 
 .coppyright {
