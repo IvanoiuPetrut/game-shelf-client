@@ -32,6 +32,7 @@ const fetchGames = async () => {
     })
     .then((response) => {
       games.value = response.data.results;
+      // console.log(
     })
     .catch((error) => {
       console.log(error);
