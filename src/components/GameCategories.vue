@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const categories = ["action", "indie", "strategy", "arcade"];
+const categories = ["action", "indie", "strategy", "casual"];
 </script>
 
 <template>
@@ -12,7 +12,15 @@ const categories = ["action", "indie", "strategy", "arcade"];
         :key="index"
         :to="{ name: 'category', params: { category } }"
       >
-        {{ category }}
+        <img
+          :src="`/src/assets/imgs/categories/${category}.webp`"
+          alt="category image"
+          class="category__img"
+          width="200"
+        />
+        <p class="category__name">
+          {{ category }}
+        </p>
       </router-link>
     </div>
   </div>
@@ -45,14 +53,23 @@ const categories = ["action", "indie", "strategy", "arcade"];
 
 .category {
   font-size: 1.4rem;
-  text-align: center;
+  // text-align: center;
   letter-spacing: 0.1rem;
   text-transform: uppercase;
-  width: 80%;
-  justify-self: center;
+  // width: 80%;
+  // justify-self: center;
+  background-color: transparent;
+
+  &__img {
+    width: 100%;
+    height: 30vh;
+    // height: 100%;
+    object-fit: cover;
+    border-radius: 0.4rem;
+  }
 
   a {
-    color: colors.$neutral-text;
+    // color: colors.$neutral-text;
   }
 
   @media (min-width: 600px) {
@@ -81,8 +98,8 @@ const categories = ["action", "indie", "strategy", "arcade"];
   }
 
   @media (min-width: 900px) {
-    width: 70%;
-    padding: 0.6rem 0;
+    // width: 70%;
+    // padding: 0.6rem 0;
   }
 }
 
