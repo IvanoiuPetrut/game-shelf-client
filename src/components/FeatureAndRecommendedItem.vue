@@ -102,7 +102,7 @@ const slidesNumber = computed((): number => {
   &:hover {
     .game__img {
       transition: all 0.3s ease-in-out;
-      transform: scale(1.1);
+      transform: scale(1.05);
       filter: blur(2px);
     }
     .game__details {
