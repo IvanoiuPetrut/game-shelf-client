@@ -60,7 +60,7 @@ const categories = ["action", "indie", "strategy", "casual"];
   // hover
   &:hover {
     .category__img {
-      transform: scale(1.05git);
+      transform: scale(1.05);
     }
 
     .overlay {
