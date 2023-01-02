@@ -1,16 +1,22 @@
 <template>
-  <div class="game">
-    <slot name="image">
-      <img :src="gameImage" alt="game image" width="200" class="game__img" />
-    </slot>
-    <div class="game__content">
-      <p class="game__genre">
-        <slot name="genre"></slot>
-      </p>
-      <p class="game__name">
-        <slot name="name">{{ gameName }}</slot>
-      </p>
+  <div v-if="gameName" class="game">
+    <div>
+      <slot name="image">
+        <img :src="gameImage" alt="game image" width="200" class="game__img" />
+      </slot>
+      <div class="game__content">
+        <p class="game__genre">
+          <slot name="genre"></slot>
+        </p>
+        <p class="game__name">
+          <slot name="name">{{ gameName }}</slot>
+        </p>
+      </div>
     </div>
+  </div>
+  <div v-else>
+    <div class="game__img skeleton"></div>
+    <p class="game__name skeleton"></p>
   </div>
 </template>
 
@@ -25,10 +31,8 @@ export default {
     gameId: [String, Number],
   },
   setup(props) {
-    const gameName = ref("Fallout 3");
-    const gameImage = ref(
-      "https://images.unsplash.com/photo-1612820685478-301051f03dd4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1322&q=80"
-    );
+    const gameName = ref(null);
+    const gameImage = ref();
     // const gameGenre = ref("");
 
     const gameUrl = `https://api.rawg.io/api/games/${props.gameId}`;
@@ -73,10 +77,12 @@ export default {
   color: colors.$neutral-text-secondary;
   text-transform: uppercase;
   font-weight: 500;
+  margin-top: 0.8rem;
 }
 .game__name {
   font-size: 1.4rem;
   font-weight: 500;
+  margin-top: 0.4rem;
 }
 
 .game__img {
@@ -84,5 +90,22 @@ export default {
   height: 200px;
   object-fit: cover;
   border-radius: 7px;
+}
+
+.skeleton {
+  border-radius: 7px;
+  animation: pulse-bg 1s infinite;
+}
+
+@keyframes pulse-bg {
+  0% {
+    background-color: colors.$neutral-bg-secondary;
+  }
+  50% {
+    background-color: colors.$neutral-bg;
+  }
+  100% {
+    background-color: colors.$neutral-bg-secondary;
+  }
 }
 </style>
