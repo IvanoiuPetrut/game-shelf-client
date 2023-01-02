@@ -7,11 +7,12 @@ const categories = ["action", "indie", "strategy", "casual"];
     <h2>Browse by category</h2>
     <div class="categories">
       <router-link
-        class="btn category"
+        class="category"
         v-for="(category, index) in categories"
         :key="index"
         :to="{ name: 'category', params: { category } }"
       >
+        <div class="overlay"></div>
         <img
           :src="`/src/assets/imgs/categories/${category}.webp`"
           alt="category image"
@@ -37,6 +38,7 @@ const categories = ["action", "indie", "strategy", "casual"];
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.6rem;
+  height: 30vh;
 
   @media (min-width: 600px) {
     grid-template-columns: repeat(2, 1fr);
@@ -52,24 +54,52 @@ const categories = ["action", "indie", "strategy", "casual"];
 }
 
 .category {
-  font-size: 1.4rem;
-  // text-align: center;
-  letter-spacing: 0.1rem;
-  text-transform: uppercase;
-  // width: 80%;
-  // justify-self: center;
-  background-color: transparent;
+  border-radius: 7px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  // hover
+  &:hover {
+    .category__img {
+      transform: scale(1.1);
+    }
+
+    .overlay {
+      bottom: -100px;
+    }
+  }
+
+  .overlay {
+    background: colors.$accent-gradient;
+    border-radius: 7px;
+    z-index: 9;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    bottom: 0;
+    transition: all 0.3s ease;
+  }
 
   &__img {
     width: 100%;
-    height: 30vh;
-    // height: 100%;
+    height: 100%;
     object-fit: cover;
-    border-radius: 0.4rem;
+    border-radius: 7px;
+    position: relative;
+    transition: all 0.3s ease;
   }
 
-  a {
-    // color: colors.$neutral-text;
+  &__name {
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    text-align: center;
+    color: colors.$neutral-text;
+    font-weight: 600;
+    letter-spacing: 0.1rem;
+    position: absolute;
+    bottom: 5%;
+    left: 0;
+    width: 100%;
+    z-index: 99;
   }
 
   @media (min-width: 600px) {
@@ -98,7 +128,7 @@ const categories = ["action", "indie", "strategy", "casual"];
   }
 
   @media (min-width: 900px) {
-    // width: 70%;
+    width: 70%;
     // padding: 0.6rem 0;
   }
 }
