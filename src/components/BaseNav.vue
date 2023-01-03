@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import BaseSeachBar from "./BaseSeachBar.vue";
 import IconBook from "./icons/IconBook.vue";
 import IconMenu from "./icons/IconMenu.vue";
 
@@ -22,6 +23,7 @@ const toggleMobileNav = () => {
       <button class="nav__burger btn" @click="toggleMobileNav">
         <IconMenu />
       </button>
+      <BaseSeachBar />
       <div
         class="nav__right"
         :class="{ 'nav__right--visible': isMobileNavVisible }"
