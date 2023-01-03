@@ -1,10 +1,29 @@
 <script setup lang="ts">
 import IconSearchNormal from "@/components/icons/IconSearchNormal.vue";
+defineProps({
+  label: {
+    type: String,
+    default: "",
+  },
+  modelValue: {
+    type: [String, Number],
+    default: "",
+  },
+});
 </script>
 
 <template>
   <div class="input__wrapper">
-    <input class="game__input" type="text" placeholder="Search by title" />
+    <input
+      class="game__input"
+      type="text"
+      v-bind="$attrs"
+      :placeholder="label"
+      :value="modelValue"
+      @input="
+        $emit('update:modelValue', ($event.target as HTMLInputElement).value)
+      "
+    />
     <IconSearchNormal class="icon" />
   </div>
 </template>

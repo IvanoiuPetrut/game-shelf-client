@@ -4,6 +4,7 @@ import BaseSeachBar from "./BaseSeachBar.vue";
 import IconBook from "./icons/IconBook.vue";
 import IconMenu from "./icons/IconMenu.vue";
 
+const gameQuery = ref("");
 const isMobileNavVisible = ref(false);
 
 const toggleMobileNav = () => {
@@ -23,7 +24,8 @@ const toggleMobileNav = () => {
       <button class="nav__burger btn" @click="toggleMobileNav">
         <IconMenu />
       </button>
-      <BaseSeachBar />
+      <BaseSeachBar v-model="gameQuery" label="Search for games" />
+      {{ gameQuery }}
       <div
         class="nav__right"
         :class="{ 'nav__right--visible': isMobileNavVisible }"
