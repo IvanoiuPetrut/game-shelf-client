@@ -1,16 +1,36 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import { API_URL } from "@/api";
+import axios from "axios";
 import BaseSeachBar from "./BaseSeachBar.vue";
 import IconBook from "./icons/IconBook.vue";
 import IconMenu from "./icons/IconMenu.vue";
 
 const gameQuery = ref("");
+const games = ref<any[]>([]);
 const isMobileNavVisible = ref(false);
 
 const toggleMobileNav = () => {
   isMobileNavVisible.value = !isMobileNavVisible.value;
   console.log(isMobileNavVisible.value);
 };
+
+const fetchGames = async () => {
+  axios
+    .get(`${API_URL}/games`, {
+      params: {
+        search: gameQuery.value,
+      },
+    })
+    .then((response) => {
+      games.value = response.data.results;
+      console.log(response.data);
+    });
+};
+
+watch(gameQuery, () => {
+  fetchGames();
+});
 </script>
 
 <template>
@@ -24,7 +44,20 @@ const toggleMobileNav = () => {
       <button class="nav__burger btn" @click="toggleMobileNav">
         <IconMenu />
       </button>
-      <BaseSeachBar v-model="gameQuery" label="Search for games" />
+      <div class="search-bar__wrapper">
+        <BaseSeachBar
+          v-model="gameQuery"
+          label="Search for games"
+          class="search-bar"
+        />
+        <ul v-if="games.length > 0" class="results">
+          <li v-for="game in games" :key="game.id" class="results__item">
+            <router-link :to="{ name: 'gameDetails', params: { id: game.id } }">
+              {{ game.name }}
+            </router-link>
+          </li>
+        </ul>
+      </div>
       {{ gameQuery }}
       <div
         class="nav__right"
@@ -140,5 +173,32 @@ const toggleMobileNav = () => {
   &:hover {
     background-color: colors.$neutral-bg;
   }
+}
+
+.search-bar__wrapper {
+  position: relative;
+  // width: 10%;
+  // max-width: 40rem;
+}
+
+.search-bar:focus-within + .results {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: colors.$neutral-bg-secondary;
+  border-radius: 7px;
+  padding: 1.6rem;
+  z-index: 999;
+  box-shadow: 0 0 0.4rem 0.1rem rgba(0, 0, 0, 0.1);
+
+  transition: opacity 0.15s ease-in-out;
+  opacity: 0;
+  pointer-events: none;
 }
 </style>
