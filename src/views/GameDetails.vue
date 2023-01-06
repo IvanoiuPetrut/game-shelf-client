@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, onBeforeUpdate } from "vue";
 import axios from "axios";
 import { API_URL } from "@/api";
 
@@ -53,6 +53,10 @@ const fetchGameDetails = async () => {
 };
 
 onMounted(() => {
+  fetchGameDetails();
+});
+
+onBeforeUpdate(() => {
   fetchGameDetails();
 });
 </script>
