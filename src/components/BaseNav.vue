@@ -38,7 +38,7 @@ watch(gameQuery, () => {
     <nav class="nav">
       <div class="nav__left">
         <RouterLink to="/" class="nav__logo">
-          <IconBook /> GameShelf
+          <IconBook /> <span>GameShelf</span>
         </RouterLink>
       </div>
       <button class="nav__burger btn" @click="toggleMobileNav">
@@ -53,12 +53,21 @@ watch(gameQuery, () => {
         <ul v-if="games.length > 0" class="results">
           <li v-for="game in games" :key="game.id" class="results__item">
             <router-link :to="{ name: 'gameDetails', params: { id: game.id } }">
-              {{ game.name }}
+              <div class="game">
+                <img :src="game.background_image" alt="" />
+                <div class="game__details">
+                  <p class="game__name">
+                    {{ game.name }}
+                  </p>
+                  <p class="game__rating">
+                    {{ game.metacritic }}
+                  </p>
+                </div>
+              </div>
             </router-link>
           </li>
         </ul>
       </div>
-      {{ gameQuery }}
       <div
         class="nav__right"
         :class="{ 'nav__right--visible': isMobileNavVisible }"
@@ -177,8 +186,9 @@ watch(gameQuery, () => {
 
 .search-bar__wrapper {
   position: relative;
-  // width: 10%;
+  width: 20%;
   // max-width: 40rem;
+  // width: 300px;
 }
 
 .search-bar:focus-within + .results {
@@ -190,15 +200,64 @@ watch(gameQuery, () => {
   position: absolute;
   top: 100%;
   left: 0;
-  width: 100%;
+  // width: 100%;
+  // min-width: 40rem;
+  width: 400px;
   background-color: colors.$neutral-bg-secondary;
   border-radius: 7px;
-  padding: 1.6rem;
+  padding: 1.2rem 0.6rem;
   z-index: 999;
   box-shadow: 0 0 0.4rem 0.1rem rgba(0, 0, 0, 0.1);
 
   transition: opacity 0.15s ease-in-out;
-  opacity: 0;
-  pointer-events: none;
+  // opacity: 0;
+  // pointer-events: none;
+}
+
+// .results__item {
+//   width: 100%;
+// }
+.results__item > a {
+  font-size: 1rem;
+  font-weight: 400;
+  width: 100%;
+  color: colors.$neutral-text-secondary;
+  padding: 0.4rem 0.6rem;
+
+  &:hover {
+    color: colors.$neutral-text;
+  }
+}
+
+.game {
+  display: flex;
+  gap: 1.6rem;
+}
+
+.game > img {
+  flex: 0 0 6.4rem;
+  align-self: center;
+  width: 6.4rem;
+  height: 3.6rem;
+  object-fit: cover;
+  border-radius: 3px;
+}
+
+.game__details {
+  display: flex;
+  flex-direction: column;
+}
+
+.game__rating {
+  color: colors.$accent;
+  background-color: colors.$accent-transparent;
+  padding: 0rem 0.6rem;
+  border: 1px solid colors.$accent;
+  border-radius: 7px;
+  align-self: flex-start;
+}
+
+.game__rating:empty {
+  display: none;
 }
 </style>
