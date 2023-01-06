@@ -9,6 +9,11 @@ import IconMenu from "./icons/IconMenu.vue";
 const gameQuery = ref("");
 const games = ref<any[]>([]);
 const isMobileNavVisible = ref(false);
+const showResults = ref(true);
+
+const hideResults = () => {
+  showResults.value = false;
+};
 
 const toggleMobileNav = () => {
   isMobileNavVisible.value = !isMobileNavVisible.value;
@@ -49,9 +54,15 @@ watch(gameQuery, () => {
           v-model="gameQuery"
           label="Search for games"
           class="search-bar"
+          @focus="showResults = true"
         />
-        <ul v-if="games.length > 0" class="results">
-          <li v-for="game in games" :key="game.id" class="results__item">
+        <ul v-if="games.length > 0" class="results" v-show="showResults">
+          <li
+            v-for="game in games"
+            :key="game.id"
+            class="results__item"
+            @click="hideResults"
+          >
             <router-link :to="{ name: 'gameDetails', params: { id: game.id } }">
               <div class="game">
                 <img :src="game.background_image" alt="" />
@@ -187,11 +198,10 @@ watch(gameQuery, () => {
 .search-bar__wrapper {
   position: relative;
   width: 20%;
-  // max-width: 40rem;
-  // width: 300px;
 }
 
-.search-bar:focus-within + .results {
+.search-bar:focus-within + .results,
+.results:focus-within {
   opacity: 1;
   pointer-events: auto;
 }
@@ -200,8 +210,6 @@ watch(gameQuery, () => {
   position: absolute;
   top: 100%;
   left: 0;
-  // width: 100%;
-  // min-width: 40rem;
   width: 400px;
   background-color: colors.$neutral-bg-secondary;
   border-radius: 7px;
@@ -210,13 +218,10 @@ watch(gameQuery, () => {
   box-shadow: 0 0 0.4rem 0.1rem rgba(0, 0, 0, 0.1);
 
   transition: opacity 0.15s ease-in-out;
-  // opacity: 0;
-  // pointer-events: none;
+  opacity: 0;
+  pointer-events: none;
 }
 
-// .results__item {
-//   width: 100%;
-// }
 .results__item > a {
   font-size: 1rem;
   font-weight: 400;
