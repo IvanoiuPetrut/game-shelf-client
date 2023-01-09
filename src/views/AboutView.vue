@@ -1,21 +1,19 @@
+<script setup lang="ts">
+import CodeSnippet from "@/components/CodeSnippet.vue";
+</script>
+
 <template>
-  <div class="about">
-    <h1>Problems</h1>
-    <ul>
-      <li>
-        BaseButton takes classes where is used but doesent find the css class
-        with the css attributes in the current scope
-      </li>
-    </ul>
+  <div class="about__wrapper">
+    <h1>Implementation</h1>
+    <CodeSnippet />
   </div>
 </template>
 
-<style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
+<style lang="scss" scoped>
+@use "@/assets/style/colors.scss" as colors;
+@use "@/assets/style/component.scss" as component;
+
+.about__wrapper {
+  @include component.container;
 }
 </style>
