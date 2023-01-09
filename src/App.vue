@@ -15,10 +15,8 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <BaseNav />
-  <header>
-    <HeaderItem v-if="$route.path === '/'" />
-  </header>
+  <BaseNav class="navigation" />
+  <HeaderItem v-if="$route.path === '/'" />
 
   <RouterView />
   <BaseFooter />
@@ -26,4 +24,8 @@ onBeforeMount(() => {
 
 <style lang="scss" scoped>
 @use "@/assets/style/colors.scss" as colors;
+
+.navigation {
+  margin-bottom: 3.2rem;
+}
 </style>

@@ -17,7 +17,6 @@ const hideResults = () => {
 
 const toggleMobileNav = () => {
   isMobileNavVisible.value = !isMobileNavVisible.value;
-  console.log(isMobileNavVisible.value);
 };
 
 const fetchGames = async () => {
@@ -40,59 +39,77 @@ watch(gameQuery, () => {
 
 <template>
   <div class="nav__wrapper">
-    <nav class="nav">
-      <div class="nav__left">
-        <RouterLink to="/" class="nav__logo">
-          <IconBook /> <span>GameShelf</span>
-        </RouterLink>
-      </div>
-      <button class="nav__burger btn" @click="toggleMobileNav">
-        <IconMenu />
-      </button>
-      <div class="search-bar__wrapper">
-        <BaseSeachBar
-          v-model="gameQuery"
-          label="Search for games"
-          class="search-bar"
-          @focus="showResults = true"
-        />
-        <ul v-if="games.length > 0" class="results" v-show="showResults">
-          <li
-            v-for="game in games"
-            :key="game.id"
-            class="results__item"
-            @click="hideResults"
-          >
-            <router-link :to="{ name: 'gameDetails', params: { id: game.id } }">
-              <div class="game">
-                <img :src="game.background_image" alt="" />
-                <div class="game__details">
-                  <p class="game__name">
-                    {{ game.name }}
-                  </p>
-                  <p class="game__rating">
-                    {{ game.metacritic }}
-                  </p>
-                </div>
-              </div>
-            </router-link>
-          </li>
-        </ul>
-      </div>
-      <div
-        class="nav__right"
-        :class="{ 'nav__right--visible': isMobileNavVisible }"
-      >
-        <router-link
-          :to="{ name: 'category', params: { category: 'default' } }"
-        >
-          Categories
-        </router-link>
-        <router-link :to="{ name: 'about' }">About</router-link>
-        <router-link :to="{ name: 'register' }">Register</router-link>
+    <RouterLink to="/" class="nav__logo">
+      <IconBook class="icon" /> <span class="desktop-only">GameShelf</span>
+    </RouterLink>
 
-        <!-- <router-link :to="{ name: 'login' }">Login</router-link> -->
-      </div>
+    <div class="search-bar__wrapper">
+      <BaseSeachBar
+        v-model="gameQuery"
+        label="Search for games"
+        class="search-bar"
+        @focus="showResults = true"
+      />
+      <ul v-if="games.length > 0" class="results" v-show="showResults">
+        <li
+          v-for="game in games"
+          :key="game.id"
+          class="results__item"
+          @click="hideResults"
+        >
+          <router-link :to="{ name: 'gameDetails', params: { id: game.id } }">
+            <div class="game">
+              <img :src="game.background_image" alt="" />
+              <div class="game__details">
+                <p class="game__name">
+                  {{ game.name }}
+                </p>
+                <p class="game__rating">
+                  {{ game.metacritic }}
+                </p>
+              </div>
+            </div>
+          </router-link>
+        </li>
+      </ul>
+    </div>
+
+    <button
+      aria-controls="primary-nav"
+      class="nav__burger"
+      @click="toggleMobileNav"
+    >
+      <IconMenu class="icon" />
+    </button>
+
+    <nav
+      ref="inner_nav"
+      class="nav"
+      :class="{ 'nav--visible': isMobileNavVisible }"
+    >
+      <ul id="primary-nav">
+        <li>
+          <router-link to="/" @click="toggleMobileNav">Home</router-link>
+        </li>
+        <li>
+          <router-link
+            :to="{ name: 'category', params: { category: 'default' } }"
+            @click="toggleMobileNav"
+          >
+            Categories
+          </router-link>
+        </li>
+        <li>
+          <router-link :to="{ name: 'about' }" @click="toggleMobileNav"
+            >About</router-link
+          >
+        </li>
+        <li>
+          <router-link :to="{ name: 'register' }" @click="toggleMobileNav"
+            >Register</router-link
+          >
+        </li>
+      </ul>
     </nav>
   </div>
 </template>
@@ -101,73 +118,123 @@ watch(gameQuery, () => {
 @use "@/assets/style/colors.scss" as colors;
 @use "@/assets/style/component.scss" as component;
 
-.nav__wrapper {
-  @include component.container;
-  background-color: colors.$neutral-bg-secondary;
-  max-width: 100%;
+.desktop-only {
+  display: none;
 
-  @media (min-width: 1000px) {
-    // padding: 0 12.8rem;
+  @media (min-width: 768px) {
+    display: block;
   }
 }
-.nav {
+.nav__wrapper {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1.6rem;
+  gap: 1.2rem;
+  padding: 0.8rem 1.2rem;
+  background-color: colors.$neutral-bg-secondary;
+
+  @media (min-width: 768px) {
+    gap: 2rem;
+    padding: 0.8rem 3.2rem;
+  }
+
+  @media (min-width: 1024px) {
+    gap: 3.2rem;
+    padding: 0.8rem 4.8rem;
+  }
+
+  @media (min-width: 1336px) {
+    justify-content: space-between;
+  }
+}
+
+.nav {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: min(80%, 400px);
+  z-index: 999;
+  background: colors.$neutral-gradient;
+  backdrop-filter: blur(10px);
+  padding: 6.4rem 1.2rem;
+
+  transform: translateX(100%);
+  transition: transform 0.2s ease-in-out;
+
+  @media (min-width: 1336px) {
+    position: static;
+    padding: 0;
+    width: auto;
+    height: auto;
+    background: none;
+    transform: translateX(0);
+  }
+
+  ul {
+    @media (min-width: 1336px) {
+      display: flex;
+      gap: 1.2rem;
+    }
+  }
+
+  li:not(:last-child) {
+    margin-bottom: 1.2rem;
+    @media (min-width: 1336px) {
+      margin-bottom: 0;
+    }
+  }
+
+  &--visible {
+    transform: translateX(0);
+  }
+}
+.nav__logo {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 1.6rem;
+  color: colors.$neutral-text;
+
+  &:hover {
+    color: colors.$accent;
+  }
+
+  .icon {
+    width: 2rem;
+    height: 2rem;
+    fill: colors.$accent;
+  }
+}
+
+.nav a::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
   width: 100%;
-  padding: 0.4rem 0;
-  margin-bottom: 2.4rem;
-  position: relative;
+  height: 2px;
+  background-color: colors.$accent;
+  border-radius: 7px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.2s ease-in-out;
+}
 
-  @media (min-width: 800px) {
-    margin-bottom: 3.2rem;
-  }
+.nav a:hover::before {
+  transform: scaleX(1);
+}
+.nav a {
+  display: inline-block;
+  font-size: 1.4rem;
+  padding: 0.4rem 0.8rem;
+  color: colors.$neutral-text;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  border-radius: 7px;
 
-  @media (min-width: 1000px) {
-    margin-bottom: 4rem;
-  }
-
-  &__right {
-    display: flex;
-    flex-direction: column;
-    // display: none;
-    gap: 1.6rem;
-    text-align: right;
-    padding: 1.6rem;
-    background-color: colors.$neutral-bg-secondary;
-    z-index: 999;
-
-    position: absolute;
-    top: 100%;
-    right: 0;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.15s ease-in-out;
-
-    @media (min-width: 800px) {
-      flex-direction: row;
-      z-index: 0;
-      position: relative;
-      opacity: 1;
-      padding: 0;
-      pointer-events: auto;
-    }
-
-    &--visible {
-      opacity: 1;
-      pointer-events: auto;
-    }
-  }
-
-  &__burger {
-    @media (min-width: 800px) {
-      display: none;
-    }
-  }
-
-  .btn {
-    background-color: transparent;
+  @media (min-width: 1336px) {
+    font-size: 1.2rem;
   }
 }
 
@@ -175,29 +242,34 @@ watch(gameQuery, () => {
   color: colors.$accent;
 }
 
-.nav__left a:first-of-type {
+.nav__burger {
+  z-index: 1000;
+  background-color: transparent;
+  position: fixed;
+  right: 1.2rem;
   color: colors.$neutral-text;
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-}
+  border: none;
+  padding: 0.4rem;
+  cursor: pointer;
 
-.nav a {
-  display: inline-block;
-  font-size: 1.4rem;
-  padding: 0.4rem 0.8rem;
-  color: colors.$neutral-text;
-  font-weight: bold;
-  border-radius: 7px;
+  @media (min-width: 1336px) {
+    display: none;
+  }
 
-  &:hover {
-    background-color: colors.$neutral-bg;
+  .icon {
+    width: 2rem;
+    height: 2rem;
   }
 }
 
 .search-bar__wrapper {
   position: relative;
-  width: 20%;
+  width: min(100%, 200px);
+  margin-right: 3.6rem;
+
+  @media (min-width: 1336px) {
+    margin-right: auto;
+  }
 }
 
 .search-bar:focus-within + .results,
@@ -209,17 +281,30 @@ watch(gameQuery, () => {
 .results {
   position: absolute;
   top: 100%;
-  left: 0;
-  width: 400px;
+  height: min(50vh, 400px);
+  overflow-y: auto;
+  left: 50%;
+  transform: translateX(-50%);
   background-color: colors.$neutral-bg-secondary;
   border-radius: 7px;
   padding: 1.2rem 0.6rem;
   z-index: 999;
   box-shadow: 0 0 0.4rem 0.1rem rgba(0, 0, 0, 0.1);
+  border: 2px solid colors.$accent-transparent;
 
   transition: opacity 0.15s ease-in-out;
   opacity: 0;
   pointer-events: none;
+
+  @media (min-width: 750px) {
+    width: 300px;
+    left: 75%;
+  }
+
+  @media (min-width: 1100px) {
+    width: 400px;
+    left: 80%;
+  }
 }
 
 .results__item > a {
@@ -251,6 +336,14 @@ watch(gameQuery, () => {
 .game__details {
   display: flex;
   flex-direction: column;
+}
+
+.game__name {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  width: 100%;
 }
 
 .game__rating {
