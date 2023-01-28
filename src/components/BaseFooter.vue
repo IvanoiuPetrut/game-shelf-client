@@ -42,10 +42,10 @@ import IconBook from "./icons/IconBook.vue";
           </ul>
         </div>
         <div class="span--2">
-          <h3>GameShelf</h3>
+          <h3>Game Shelf</h3>
           <div class="description">
             <p>
-              GameShelf is a project created by
+              Game Shelf is a project created by
               <a
                 href="
             https://www.linkedin.com/in/andrew-mcintosh-5b1b3b1b1/

@@ -8,9 +8,14 @@
 }
 
 a {
+  display: inline-block;
   text-decoration: none;
   color: colors.$primary;
   transition: 0.4s;
+}
+
+a:hover {
+  color: colors.$accent;
 }
 
 .btn {
