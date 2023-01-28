@@ -87,6 +87,7 @@ const slidesNumber = computed((): number => {
 @use "@/assets/style/component.scss" as component;
 
 .featured {
+  margin-bottom: 6.4rem;
   @media (min-width: 768px) {
     @include component.container;
     margin-bottom: 12.6rem;
@@ -103,7 +104,11 @@ const slidesNumber = computed((): number => {
     .game__img {
       transition: all 0.3s ease-in-out;
       transform: scale(1.05);
-      filter: blur(2px);
+      filter: blur(0px);
+
+      @media (min-width: 768px) {
+        filter: blur(2px);
+      }
     }
     .game__details {
       transform: translateY(0);
@@ -129,14 +134,16 @@ const slidesNumber = computed((): number => {
   align-items: baseline;
   justify-content: center;
   gap: 1.6rem;
+  padding: 1.2rem 0 0 0;
 
   @media (min-width: 768px) {
     justify-content: flex-start;
+    padding: 0;
   }
 }
 
 .game__rating {
-  font-size: 1.6rem;
+  font-size: 1rem;
   font-weight: 700;
   color: colors.$neutral-text;
   background-color: colors.$accent-transparent;
@@ -146,6 +153,10 @@ const slidesNumber = computed((): number => {
 
   @media (min-width: 550px) {
     display: block;
+  }
+
+  @media (min-width: 768px) {
+    font-size: 1.4rem;
   }
 }
 .game__details {
@@ -169,10 +180,15 @@ const slidesNumber = computed((): number => {
   }
 }
 .game__name {
-  font-size: 1.4rem;
+  // font-size: 1.4rem;
+  font-size: 1rem;
   font-weight: 700;
   text-align: center;
   color: colors.$neutral-text;
+
+  @media (min-width: 768px) {
+    font-size: 1.6rem;
+  }
 }
 
 .details__wrapper {

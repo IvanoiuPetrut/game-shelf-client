@@ -149,7 +149,11 @@ export default {
 
 .games__wrapper {
   @include component.container;
-  margin-bottom: 12rem;
+  margin-bottom: 6.4rem;
+
+  @media (min-width: 768px) {
+    margin-bottom: 12.6rem;
+  }
 }
 
 .header {
