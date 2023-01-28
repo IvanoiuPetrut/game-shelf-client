@@ -1,7 +1,3 @@
-<script setup lang="ts">
-import IconBook from "./icons/IconBook.vue";
-</script>
-
 <template>
   <div class="footer__wrapper">
     <footer class="footer">

@@ -158,9 +158,27 @@ export default {
 
 .header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 1.2rem;
+  // justify-content: space-between;
+  // align-items: center;
   margin-bottom: 1.2rem;
+
+  @media (min-width: 500px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.4rem;
+  }
+}
+
+h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+
+  @media (min-width: 500px) {
+    font-size: 1.6rem;
+  }
 }
 
 .navigation {
