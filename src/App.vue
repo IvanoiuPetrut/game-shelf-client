@@ -10,7 +10,6 @@ const store = useGamesTopCriticsStore();
 
 onBeforeMount(() => {
   store.fetchGames();
-  console.log("fetching games");
 });
 </script>
 

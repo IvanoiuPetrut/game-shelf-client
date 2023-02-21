@@ -17,7 +17,6 @@ const submit = async () => {
     password: password.value,
     passwordConfirm: passwordConfirm.value,
   });
-  console.log(response.data);
 };
 </script>
 

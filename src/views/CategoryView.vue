@@ -110,7 +110,6 @@ const fetchGames = async () => {
     })
     .then((response) => {
       games.value = response.data.results;
-      console.log("category: " + response.data);
     });
 };
 
@@ -118,7 +117,6 @@ const areFiltersActive = ref(false);
 
 const toggleFilters = () => {
   areFiltersActive.value = !areFiltersActive.value;
-  console.log(areFiltersActive.value);
 };
 
 watch(
