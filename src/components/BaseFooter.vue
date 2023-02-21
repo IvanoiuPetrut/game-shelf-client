@@ -44,14 +44,17 @@
               Game Shelf is a project created by
               <a
                 href="
-            https://www.linkedin.com/in/andrew-mcintosh-5b1b3b1b1/
+                https://www.linkedin.com/in/ivanoiu-petrut-dragos/
             "
                 target="_blank"
                 >Petrut</a
               >
             </p>
             <p>
-              See my projects on my <a href="#" target="_blank">Github Page</a>
+              See my projects on my
+              <a href="https://github.com/IvanoiuPetrut" target="_blank"
+                >Github Page</a
+              >
             </p>
             <p>
               Source of data is
