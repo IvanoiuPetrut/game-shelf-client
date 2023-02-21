@@ -33,16 +33,14 @@ export default {
   setup(props) {
     const gameName = ref(null);
     const gameImage = ref();
-    // const gameGenre = ref("");
 
     const gameUrl = `https://api.rawg.io/api/games/${props.gameId}`;
-    const gameApiKey = "f062f25bd9424cb6905d4ce655e4e583";
 
     onBeforeMount(() => {
       axios
         .get(gameUrl, {
           params: {
-            key: gameApiKey,
+            key: import.meta.env.VITE_RAWG_API_KEY,
           },
         })
         .then((response) => {

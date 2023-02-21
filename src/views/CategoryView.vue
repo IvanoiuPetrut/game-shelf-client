@@ -110,7 +110,7 @@ const fetchGames = async () => {
     })
     .then((response) => {
       games.value = response.data.results;
-      console.log(response.data);
+      console.log("category: " + response.data);
     });
 };
 

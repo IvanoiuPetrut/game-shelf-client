@@ -130,7 +130,7 @@ export default {
             <template #name>
               {{ game.name }}
             </template>
-            <template #genre>
+            <template #genre v-if="game.genres.length > 0">
               {{ game.genres[0].name }}
             </template>
           </GameItem>
