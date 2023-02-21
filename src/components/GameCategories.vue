@@ -14,7 +14,7 @@ const categories = ["action", "indie", "strategy", "casual"];
       >
         <div class="overlay"></div>
         <img
-          :src="`/src/assets/imgs/categories/${category}.webp`"
+          :src="`/assets/images/${category}.webp`"
           alt="category image"
           class="category__img"
           width="200"
