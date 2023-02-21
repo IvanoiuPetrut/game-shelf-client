@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { useGamesTopCriticsStore } from "@/stores/games-top-critics";
+import { useGamesRandomStore } from "@/stores/games-random";
 import BaseCarousel from "./BaseCarousel.vue";
 import BaseCarouselSlide from "./BaseCarouselSlide.vue";
 
-const store = useGamesTopCriticsStore();
+const store = useGamesRandomStore();
 
 const games = computed((): any => {
-  console.log(store.games[0]);
   return store.games;
 });
 
