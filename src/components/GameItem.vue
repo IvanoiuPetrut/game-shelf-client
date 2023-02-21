@@ -24,6 +24,7 @@
 import { ref } from "vue";
 import { onBeforeMount } from "vue";
 import axios from "axios";
+import { API_URL } from "@/api";
 
 export default {
   name: "GameItem",
@@ -34,7 +35,7 @@ export default {
     const gameName = ref(null);
     const gameImage = ref();
 
-    const gameUrl = `https://api.rawg.io/api/games/${props.gameId}`;
+    const gameUrl = `${API_URL}/games/${props.gameId}`;
 
     onBeforeMount(() => {
       axios
