@@ -1,16 +1,12 @@
-<a href="#">
-    <img src="https://i.postimg.cc/zXWvtRHy/pngwing-com.png" alt="Weather app logo" align="right" height="60" />
-</a>
-
 # Game Shelf
 
-Game Shelf is a Web App where users can look up information abbout games, be it the game itself, the developer or the publisher in easy to use manner.
+Game Shelf is a Web App that allows you to search for games and get information about them. It uses the [RAWG Video Games Database API](https://rawg.io/apidocs) to get the data.
 
-<a href="https://game-shelf.petrut.dev/" align="center"> Game Shelf is live here </a>
+<a href="https://game-shelf.petrut.dev/" target="_blank" align="center"> Game Shelf is live here </a>
 
-<p align="center">
-  <img src="https://repository-images.githubusercontent.com/507885601/db5f7caa-3f2e-471d-8c3e-b569f95cd2dd" alt="Photo of the presentation of the project"/>
-</p>
+<a align="center" href="https://game-shelf.petrut.dev/" target="_blank">
+  <img src="https://repository-images.githubusercontent.com/557423451/7a6c64c1-a0f7-414f-8506-0c2da47f468e" alt="Photo of the presentation of the project"/>
+</a>
 
 ## Features
 
