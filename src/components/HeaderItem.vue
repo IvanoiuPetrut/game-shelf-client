@@ -30,7 +30,7 @@ const gameBackgroundImage = computed((): any => {
         </BaseButton>
       </RouterLink>
     </div>
-    <div class="hero__section--img">
+    <div class="hero__section--img" v-if="gameBackgroundImage.length > 0">
       <div class="bookshelf">
         <div class="bookshelf__shelf"></div>
         <div class="game__wrapper">
@@ -64,6 +64,9 @@ const gameBackgroundImage = computed((): any => {
           </template>
         </HoverItem>
       </div>
+    </div>
+    <div v-else>
+      <div class="skeleton"></div>
     </div>
   </section>
 </template>
@@ -208,5 +211,22 @@ const gameBackgroundImage = computed((): any => {
 .btn--cta {
   font-size: 1.2rem;
   padding: 0.8rem 1.6rem;
+}
+
+.skeleton {
+  border-radius: 7px;
+  animation: pulse-bg 1s infinite;
+}
+
+@keyframes pulse-bg {
+  0% {
+    background-color: colors.$neutral-bg-secondary;
+  }
+  50% {
+    background-color: colors.$neutral-bg;
+  }
+  100% {
+    background-color: colors.$neutral-bg-secondary;
+  }
 }
 </style>

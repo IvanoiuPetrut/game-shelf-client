@@ -168,6 +168,9 @@ onBeforeUpdate(() => {
         </ul>
       </div>
     </div>
+    <div v-else>
+      <div class="skeleton"></div>
+    </div>
   </main>
 </template>
 
@@ -297,6 +300,25 @@ onBeforeUpdate(() => {
       font-size: 1.2rem;
       font-weight: bold;
     }
+  }
+}
+
+.skeleton {
+  border-radius: 7px;
+  animation: pulse-bg 1s infinite;
+  width: 100%;
+  height: 100vh;
+}
+
+@keyframes pulse-bg {
+  0% {
+    background-color: colors.$neutral-bg-secondary;
+  }
+  50% {
+    background-color: colors.$neutral-bg;
+  }
+  100% {
+    background-color: colors.$neutral-bg-secondary;
   }
 }
 </style>

@@ -78,7 +78,7 @@ watch(gameQuery, () => {
       class="nav__burger"
       @click="toggleMobileNav"
     >
-      <IconMenu class="icon" />
+      <IconMenu class="icon icon--menu" />
     </button>
 
     <nav
@@ -249,7 +249,15 @@ watch(gameQuery, () => {
   color: colors.$neutral-text;
   border: none;
   padding: 0.4rem;
+  background-color: colors.$accent-transparent;
+  border: 1px dashed colors.$accent;
   cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: colors.$accent;
+    color: colors.$neutral-bg-secondary;
+  }
 
   @media (min-width: 1336px) {
     display: none;

@@ -2,14 +2,20 @@
 import { RouterView } from "vue-router";
 import { onBeforeMount } from "vue";
 import { useGamesTopCriticsStore } from "@/stores/games-top-critics";
+import { useGamesMostPopularStore } from "@/stores/games-most-popular";
+import { useGamesRandomStore } from "@/stores/games-random";
 import HeaderItem from "./components/HeaderItem.vue";
 import BaseNav from "./components/BaseNav.vue";
 import BaseFooter from "./components/BaseFooter.vue";
 
-const store = useGamesTopCriticsStore();
+const gamesTopCriticsStore = useGamesTopCriticsStore();
+const gamesGamesMostPopularStore = useGamesMostPopularStore();
+const gamesRandomStore = useGamesRandomStore();
 
 onBeforeMount(() => {
-  store.fetchGames();
+  gamesTopCriticsStore.fetchGames();
+  gamesGamesMostPopularStore.fetchGames();
+  gamesRandomStore.fetchGames();
 });
 </script>
 
