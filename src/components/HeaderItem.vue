@@ -1,16 +1,6 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { useGamesTopCriticsStore } from "@/stores/games-top-critics";
 import BaseButton from "./BaseButton.vue";
 import HoverItem from "./HoverItem.vue";
-
-const store = useGamesTopCriticsStore();
-
-const gameBackgroundImage = computed((): any => {
-  return store.games.map((game: any) => {
-    return game.background_image;
-  });
-});
 </script>
 
 <template>
@@ -30,30 +20,30 @@ const gameBackgroundImage = computed((): any => {
         </BaseButton>
       </RouterLink>
     </div>
-    <div class="hero__section--img" v-if="gameBackgroundImage.length > 0">
+    <div class="hero__section--img">
       <div class="bookshelf">
         <div class="bookshelf__shelf"></div>
         <div class="game__wrapper">
           <img
-            :src="gameBackgroundImage[0]"
+            src="/assets/images/book_shelf_1.webp"
             alt="book shelf backgorund image"
             class="bookshelf__game"
             loading="lazy"
           />
           <img
-            :src="gameBackgroundImage[1]"
+            src="/assets/images/book_shelf_2.webp"
             alt="book shelf backgorund image"
             class="bookshelf__game"
             loading="lazy"
           />
           <img
-            :src="gameBackgroundImage[6]"
+            src="/assets/images/book_shelf_5.webp"
             alt="book shelf backgorund image"
             class="bookshelf__game"
             loading="lazy"
           />
           <img
-            :src="gameBackgroundImage[5]"
+            src="/assets/images/book_shelf_4.webp"
             alt="book shelf backgorund image"
             class="bookshelf__game"
             loading="lazy"
@@ -62,16 +52,13 @@ const gameBackgroundImage = computed((): any => {
         <HoverItem class="bookshelf__game--big">
           <template #content>
             <img
-              :src="gameBackgroundImage[3]"
+              src="/assets/images/book_shelf_3.webp"
               alt="book shelf backgorund image"
               loading="lazy"
             />
           </template>
         </HoverItem>
       </div>
-    </div>
-    <div v-else>
-      <div class="skeleton"></div>
     </div>
   </section>
 </template>
@@ -216,22 +203,5 @@ const gameBackgroundImage = computed((): any => {
 .btn--cta {
   font-size: 1.2rem;
   padding: 0.8rem 1.6rem;
-}
-
-.skeleton {
-  border-radius: 7px;
-  animation: pulse-bg 1s infinite;
-}
-
-@keyframes pulse-bg {
-  0% {
-    background-color: colors.$neutral-bg-secondary;
-  }
-  50% {
-    background-color: colors.$neutral-bg;
-  }
-  100% {
-    background-color: colors.$neutral-bg-secondary;
-  }
 }
 </style>
