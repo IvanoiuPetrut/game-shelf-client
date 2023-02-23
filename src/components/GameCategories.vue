@@ -18,6 +18,7 @@ const categories = ["action", "indie", "strategy", "casual"];
           alt="category image"
           class="category__img"
           width="200"
+          loading="lazy"
         />
         <p class="category__name">
           {{ category }}

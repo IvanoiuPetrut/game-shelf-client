@@ -38,21 +38,25 @@ const gameBackgroundImage = computed((): any => {
             :src="gameBackgroundImage[0]"
             alt="book shelf backgorund image"
             class="bookshelf__game"
+            loading="lazy"
           />
           <img
             :src="gameBackgroundImage[1]"
             alt="book shelf backgorund image"
             class="bookshelf__game"
+            loading="lazy"
           />
           <img
             :src="gameBackgroundImage[6]"
             alt="book shelf backgorund image"
             class="bookshelf__game"
+            loading="lazy"
           />
           <img
             :src="gameBackgroundImage[5]"
             alt="book shelf backgorund image"
             class="bookshelf__game"
+            loading="lazy"
           />
         </div>
         <HoverItem class="bookshelf__game--big">
@@ -60,6 +64,7 @@ const gameBackgroundImage = computed((): any => {
             <img
               :src="gameBackgroundImage[3]"
               alt="book shelf backgorund image"
+              loading="lazy"
             />
           </template>
         </HoverItem>

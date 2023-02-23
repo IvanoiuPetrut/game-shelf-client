@@ -71,6 +71,7 @@ onBeforeUpdate(() => {
             alt="game image"
             width="400"
             class="game__img"
+            loading="lazy"
           />
         </div>
         <div class="game__details game__details--primary">
@@ -138,6 +139,7 @@ onBeforeUpdate(() => {
               :src="screenshot.image"
               alt="game screenshot"
               width="300"
+              loading="lazy"
             />
           </div>
         </div>

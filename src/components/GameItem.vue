@@ -2,7 +2,13 @@
   <div v-if="gameName" class="game">
     <div>
       <slot name="image">
-        <img :src="gameImage" alt="game image" width="200" class="game__img" />
+        <img
+          :src="gameImage"
+          alt="game image"
+          width="200"
+          class="game__img"
+          loading="lazy"
+        />
       </slot>
       <div class="game__content">
         <p class="game__genre">

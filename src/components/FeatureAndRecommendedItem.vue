@@ -28,6 +28,7 @@ const slidesNumber = computed((): number => {
               :src="game.background_image"
               alt="game.name"
               class="game__img"
+              loading="lazy"
             />
             <div class="game__details">
               <div class="game__header">

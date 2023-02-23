@@ -124,6 +124,7 @@ export default {
                   alt="game image"
                   width="200"
                   class="game__img"
+                  loading="lazy"
                 />
               </div>
             </template>

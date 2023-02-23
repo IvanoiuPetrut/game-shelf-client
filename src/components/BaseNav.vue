@@ -58,7 +58,7 @@ watch(gameQuery, () => {
         >
           <router-link :to="{ name: 'gameDetails', params: { id: game.id } }">
             <div class="game">
-              <img :src="game.background_image" alt="" />
+              <img :src="game.background_image" alt="" loading="lazy" />
               <div class="game__details">
                 <p class="game__name">
                   {{ game.name }}
