@@ -32,12 +32,6 @@ const howGoodIsTheScore = (score: number): string => {
   }
 };
 
-const gameDescription = computed(() => {
-  return game.value.description_raw
-    ? game.value.description_raw.slice(0, 200) + "..."
-    : "";
-});
-
 const fetchGameDetails = async () => {
   Promise.all([
     axios.get(`${API_URL}/games/${props.id}`),
@@ -58,14 +52,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <main>
+  <main class="main">
     <div class="game" v-if="game.id !== undefined">
       <div class="game__details-wrapper">
         <div>
           <img
             :src="game.background_image"
             alt="game image"
-            width="400"
+            width="350"
             class="game__img"
             loading="lazy"
           />
@@ -115,13 +109,13 @@ onMounted(() => {
             </div>
           </div>
           <div>
-            <p class="game__description">{{ gameDescription }}</p>
+            <p class="game__description" v-html="game.description"></p>
           </div>
         </div>
       </div>
       <div class="game__details">
         <div v-if="gameScreenshots.length > 0">
-          <h2>Screenshots</h2>
+          <h2 class="details__title">Screenshots</h2>
           <div class="game__screenshots">
             <img
               v-for="screenshot in gameScreenshots"
@@ -134,7 +128,7 @@ onMounted(() => {
           </div>
         </div>
         <div v-if="gameTrailers.length > 0" class="trailers">
-          <h2>Trailers</h2>
+          <h2 class="details__title">Trailers</h2>
           <iframe
             v-for="trailer in gameTrailers"
             :key="trailer.id"
@@ -144,14 +138,14 @@ onMounted(() => {
             allowfullscreen
           ></iframe>
         </div>
-        <p>Available on</p>
-        <ul>
+        <p class="details__title">Available on</p>
+        <ul class="platforms">
           <li v-for="platform in game.platforms" :key="platform.platform.id">
             {{ platform.platform.name }}
           </li>
         </ul>
-        <p>Buy from</p>
-        <ul>
+        <p class="details__title">Buy from</p>
+        <ul class="stores">
           <li v-for="(store, index) in game.stores" :key="store.store.id">
             <a :href="gameStoreLinks[index].url" target="_blank">{{
               store.store.name
@@ -168,6 +162,11 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 @use "@/assets/style/colors.scss" as colors;
+@use "@/assets/style/component.scss" as component;
+
+main {
+  @include component.container;
+}
 .game {
   display: flex;
   flex-direction: column;
@@ -184,7 +183,7 @@ onMounted(() => {
       display: grid;
       grid-template-columns: 1fr 1.5fr;
       gap: 1rem;
-      margin: 3.2rem 3.2rem 5.6rem 1rem;
+      margin-bottom: 5.6rem;
     }
   }
 
@@ -202,7 +201,6 @@ onMounted(() => {
       padding-left: calc(40% + 1.2rem);
       position: absolute;
       left: 3.2rem;
-      height: 100%;
 
       background-color: colors.$neutral-bg-secondary;
       border-radius: 11px;
@@ -214,6 +212,7 @@ onMounted(() => {
     height: min(50vw, 300px);
     object-fit: cover;
     z-index: 1;
+    border-radius: 9px;
 
     @media (min-width: 850px) {
       height: 24.4rem;
@@ -223,6 +222,12 @@ onMounted(() => {
 
   &__description {
     color: colors.$neutral-text-secondary;
+    --max-lines: 6;
+
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--max-lines);
   }
 
   &__screenshots {
@@ -232,7 +237,7 @@ onMounted(() => {
 
     @media (min-width: 850px) {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 1rem;
       place-items: center;
 
@@ -242,6 +247,10 @@ onMounted(() => {
         object-fit: cover;
         border-radius: 11px;
       }
+    }
+
+    @media (min-width: 1200px) {
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     }
   }
 }
@@ -275,6 +284,7 @@ onMounted(() => {
     }
   }
 }
+
 .game__release {
   .release {
     &__field {
@@ -295,6 +305,57 @@ onMounted(() => {
   }
 }
 
+.details__title {
+  font-size: 1.8rem;
+  font-weight: 500;
+  margin-top: 3.2rem;
+
+  @media (min-width: 850px) {
+    font-size: 2.4rem;
+  }
+
+  &:first-child {
+    margin-bottom: 1.6rem;
+  }
+}
+
+.platforms {
+  display: flex;
+  // flex-direction: column;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.8rem;
+
+  font-size: 1.2rem;
+
+  li {
+    background-color: colors.$neutral-bg-secondary;
+    padding: 0.4rem 0.8rem;
+    border-radius: 11px;
+  }
+}
+
+.stores {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  font-size: 1.4rem;
+  font-weight: bold;
+
+  li:before {
+    content: ">";
+    margin-right: 0.8rem;
+  }
+
+  a {
+    color: colors.$primary;
+    font-weight: 700;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
 .skeleton {
   border-radius: 7px;
   animation: pulse-bg 1s infinite;
