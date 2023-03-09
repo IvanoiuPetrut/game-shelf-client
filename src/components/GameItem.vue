@@ -44,16 +44,10 @@ export default {
     const gameUrl = `${API_URL}/games/${props.gameId}`;
 
     onBeforeMount(() => {
-      axios
-        .get(gameUrl, {
-          params: {
-            key: import.meta.env.VITE_RAWG_API_KEY,
-          },
-        })
-        .then((response) => {
-          gameName.value = response.data.name;
-          gameImage.value = response.data.background_image;
-        });
+      axios.get(gameUrl).then((response) => {
+        gameName.value = response.data.name;
+        gameImage.value = response.data.background_image;
+      });
     });
 
     return {
