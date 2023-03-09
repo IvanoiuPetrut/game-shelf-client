@@ -1,14 +1,14 @@
 <script lang="ts">
-import { computed, ref, onMounted, onBeforeUnmount } from "vue";
+import { computed, ref } from "vue";
 import GameItem from "../components/GameItem.vue";
-import IconArrowLeftVue from "../components/icons/IconArrowLeft.vue";
-import IconArrowRightVue from "../components/icons/IconArrowRight.vue";
+import IconArrowLeft from "../components/icons/IconArrowLeft.vue";
+import IconArrowRight from "../components/icons/IconArrowRight.vue";
 export default {
   name: "GamesScroller",
   components: {
     GameItem,
-    IconArrowLeftVue,
-    IconArrowRightVue,
+    IconArrowLeft,
+    IconArrowRight,
   },
   props: {
     games: {
@@ -17,126 +17,68 @@ export default {
   },
 
   setup(props) {
-    const currentSlide = ref(0);
-    const windowWidth = ref(0);
-
-    const getWindowWidth = () => {
-      windowWidth.value = window.innerWidth;
-    };
-
     const gamesFromProps = computed((): any => {
       return props.games;
     });
 
-    const gameSlides = computed((): any => {
-      let numberOfGames =
-        windowWidth.value > 1200
-          ? 4
-          : windowWidth.value > 800
-          ? 3
-          : windowWidth.value > 500
-          ? 2
-          : 1;
-      const numberOfGamesPerSlide = Math.ceil(
-        props.games.length / numberOfGames
-      );
-      const slides = [];
-      for (let i = 0; i < numberOfGamesPerSlide; i++) {
-        slides.push(
-          props.games.slice(
-            i * numberOfGames,
-            i * numberOfGames + numberOfGames
-          )
-        );
-      }
-      return slides;
-    });
+    const fristItem = ref(0);
+    const lastItem = ref(2);
 
-    const nextSlide = () => {
-      if (currentSlide.value < gameSlides.value.length - 1) {
-        currentSlide.value++;
-      }
+    const scrollRight = () => {
+      if (lastItem.value > gamesFromProps.value.length) return;
+      fristItem.value += 3;
+      lastItem.value += 3;
     };
 
-    const prevSlide = () => {
-      if (currentSlide.value > 0) {
-        currentSlide.value--;
-      }
+    const scrollLeft = () => {
+      if (lastItem.value < 3) return;
+      fristItem.value -= 3;
+      lastItem.value -= 3;
     };
-
-    onMounted(() => {
-      getWindowWidth();
-      window.addEventListener("resize", getWindowWidth);
-    });
-
-    onBeforeUnmount(() => {
-      window.removeEventListener("resize", getWindowWidth);
-    });
 
     return {
       gamesFromProps,
       props,
-      gameSlides,
-      nextSlide,
-      prevSlide,
-      currentSlide,
-      windowWidth,
+      fristItem,
+      lastItem,
+      scrollRight,
+      scrollLeft,
     };
   },
 };
 </script>
 
 <template>
-  <div class="games__wrapper">
+  <div class="wrapper">
     <div class="header">
-      <h2>
-        <slot name="title" class="title">Featured Games</slot>
+      <h2 class="title">
+        <slot name="title"></slot>
       </h2>
       <div class="navigation">
-        <button
-          @click="prevSlide"
-          class="btn"
-          :class="{ disabled: currentSlide === 0 }"
-        >
-          <IconArrowLeftVue></IconArrowLeftVue>
+        <button @click="scrollLeft" class="btn">
+          <IconArrowLeft></IconArrowLeft>
         </button>
-        <button
-          @click="nextSlide"
-          class="btn"
-          :class="{ disabled: currentSlide === gameSlides.length - 1 }"
-        >
-          <IconArrowRightVue></IconArrowRightVue>
+        <button @click="scrollRight" class="btn">
+          <IconArrowRight></IconArrowRight>
         </button>
       </div>
     </div>
-    <div v-if="gamesFromProps.length > 0" class="games">
-      <div
-        v-for="game in gameSlides[currentSlide]"
+    <div v-if="props.games.length > 0" class="games">
+      <RouterLink
+        v-for="(game, index) in gamesFromProps"
         :key="game.id"
+        :to="{ name: 'gameDetails', params: { id: game.id } }"
         class="game__wrapper"
+        :class="{
+          'game__wrapper--active': index >= fristItem && index <= lastItem,
+        }"
       >
-        <router-link :to="{ name: 'gameDetails', params: { id: game.id } }">
-          <GameItem>
-            <template #image>
-              <div class="img__wrapper">
-                <img
-                  :src="game.background_image"
-                  alt="game image"
-                  width="200"
-                  class="game__img"
-                  loading="lazy"
-                />
-              </div>
-            </template>
-            <template #name>
-              {{ game.name }}
-            </template>
-            <template #genre v-if="game.genres.length > 0">
-              {{ game.genres[0].name }}
-            </template>
-          </GameItem>
-        </router-link>
-      </div>
+        <GameItem :gameId="game.id">
+          <template #genre v-if="game.genres.length > 0">
+            {{ game.genres[0].name }}
+          </template>
+        </GameItem>
+      </RouterLink>
     </div>
     <div v-else>
       <div class="skeleton"></div>
@@ -148,7 +90,7 @@ export default {
 @use "@/assets/style/colors.scss" as colors;
 @use "@/assets/style/component.scss" as component;
 
-.games__wrapper {
+.wrapper {
   @include component.container;
   margin-bottom: 6.4rem;
 
@@ -159,17 +101,18 @@ export default {
 
 .header {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   gap: 1.2rem;
-  // justify-content: space-between;
-  // align-items: center;
   margin-bottom: 1.2rem;
 
-  @media (min-width: 500px) {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2.4rem;
+  .navigation {
+    display: none;
+
+    @media (min-width: 1050px) {
+      display: flex;
+      gap: 1.2rem;
+    }
   }
 }
 
@@ -180,57 +123,46 @@ h2 {
   @media (min-width: 500px) {
     font-size: 1.6rem;
   }
-}
 
-.navigation {
-  display: flex;
-  gap: 1.2rem;
+  @media (min-width: 1050px) {
+    font-size: 2.4rem;
+  }
 }
 
 .games {
   display: flex;
   gap: 1.6rem;
-}
-
-.game__wrapper {
   width: 100%;
-  &:hover {
-    .game__img {
-      transform: scale(1.05);
+  overflow: auto;
+
+  @media screen and (min-width: 768px) {
+    -webkit-overflow-scrolling: unset;
+  }
+
+  @media (min-width: 1050px) {
+    justify-content: space-between;
+
+    &::-webkit-scrollbar {
+      display: none;
     }
   }
 }
 
-.img__wrapper {
-  width: 100%;
-  height: 18.6rem;
-  object-fit: cover;
-  border-radius: 7px;
-  overflow: hidden;
+.game__wrapper {
+  flex-shrink: 0;
+  width: 16.8rem;
+
+  @media (min-width: 1050px) {
+    display: none;
+  }
+
+  @media (min-width: 1200px) {
+    width: calc(100% / 3 - 1.6rem);
+  }
 }
 
-.game__img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-
-  transition: transform 0.3s ease-in-out;
-}
-
-.btn {
-  padding: 0.4rem 0.6rem;
-}
-
-.disabled {
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-.loader {
-  width: 100%;
-  height: 18.6rem;
-  background-color: colors.$neutral-text-secondary;
-  border-radius: 7px;
+.game__wrapper--active {
+  display: block;
 }
 
 .skeleton {
