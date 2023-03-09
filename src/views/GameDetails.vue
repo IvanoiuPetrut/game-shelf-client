@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUpdate } from "vue";
+import { ref, computed, onMounted } from "vue";
 import axios from "axios";
 import { API_URL } from "@/api";
 
@@ -55,10 +55,6 @@ const fetchGameDetails = async () => {
 onMounted(() => {
   fetchGameDetails();
 });
-
-onBeforeUpdate(() => {
-  fetchGameDetails();
-});
 </script>
 
 <template>
@@ -79,14 +75,7 @@ onBeforeUpdate(() => {
           <div class="game__rating">
             <div class="rating__field">
               <p class="rating__type">Metacritic</p>
-              <span class="rating__score"
-                >{{ game.metacritic }}
-                {{ howGoodIsTheScore(game.metacritic) }}</span
-              >
-            </div>
-            <div class="rating__field">
-              <p class="rating__type">Users</p>
-              <span class="rating__score"
+              <span class="rating__score" v-if="game.metacritic !== null"
                 >{{ game.metacritic }}
                 {{ howGoodIsTheScore(game.metacritic) }}</span
               >
@@ -109,6 +98,7 @@ onBeforeUpdate(() => {
               <p class="release__type">Publisher</p>
               <router-link
                 class="release__value"
+                v-if="game.publishers.length > 0"
                 :to="{
                   name: 'publisher',
                   params: { publisher: game.publishers[0].id },
