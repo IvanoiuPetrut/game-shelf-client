@@ -23,7 +23,7 @@ onBeforeMount(() => {
   <BaseNav class="navigation" />
   <HeaderItem v-if="$route.path === '/'" />
 
-  <RouterView />
+  <RouterView :key="$route.fullPath" />
   <BaseFooter />
 </template>
 
