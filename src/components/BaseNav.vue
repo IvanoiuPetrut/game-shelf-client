@@ -12,7 +12,9 @@ const isMobileNavVisible = ref(false);
 const showResults = ref(true);
 
 const hideResults = () => {
-  showResults.value = false;
+  setTimeout(() => {
+    showResults.value = false;
+  }, 100);
 };
 
 const toggleMobileNav = () => {
@@ -58,7 +60,11 @@ watch(gameQuery, () => {
         >
           <router-link :to="{ name: 'gameDetails', params: { id: game.id } }">
             <div class="game">
-              <img :src="game.background_image" alt="" loading="lazy" />
+              <img
+                :src="game.background_image"
+                :alt="game.name"
+                loading="lazy"
+              />
               <div class="game__details">
                 <p class="game__name">
                   {{ game.name }}
@@ -282,7 +288,6 @@ watch(gameQuery, () => {
 .search-bar:focus-within + .results,
 .results:focus-within {
   opacity: 1;
-  pointer-events: auto;
 }
 
 .results {
@@ -301,7 +306,6 @@ watch(gameQuery, () => {
 
   transition: opacity 0.15s ease-in-out;
   opacity: 0;
-  pointer-events: none;
 
   @media (min-width: 750px) {
     width: 300px;
