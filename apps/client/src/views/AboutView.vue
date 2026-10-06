@@ -1,99 +1,170 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import AppIcon, { type IconName } from "@/components/ui/AppIcon.vue";
+
+const features: { icon: IconName; title: string; text: string }[] = [
+  {
+    icon: "search",
+    title: "Discover",
+    text: "Search and filter hundreds of thousands of games by genre, platform, store and tag.",
+  },
+  {
+    icon: "bookmark",
+    title: "Track",
+    text: "Keep a shelf of what you're playing, have finished, want to play or dropped, and rate each game.",
+  },
+  {
+    icon: "calendar",
+    title: "Plan ahead",
+    text: "See what's releasing over the next six months, grouped by month.",
+  },
+  {
+    icon: "dice",
+    title: "Get surprised",
+    text: "Can't choose? Roll the dice for a random, well-reviewed game.",
+  },
+];
+</script>
 
 <template>
-  <div class="about__wrapper">
-    <h1>About Our Game Shelf App</h1>
-    <p>
-      Our game shelf app is a platform where users can browse and discover a
-      wide variety of games. Our main features include a user-friendly
-      interface, detailed game information, and user reviews.
-    </p>
-    <h2>Meet the Team</h2>
-    <p class="secondary">
-      Our team is made up of experienced gaming enthusiasts who have a passion
-      for creating high-quality apps. Learn more about our team members and
-      their backgrounds <a href="#">here</a>.
-    </p>
-    <h2>Contact Us</h2>
-    <p class="secondary">
-      If you have any questions or feedback about our app, please don't hesitate
-      to reach out to us. You can contact us via email at
-      <a href="#">support@gameshelfapp.com</a> or through our social media
-      channels <a href="#">Twitter</a> and <a href="#">Facebook</a>.
-    </p>
-    <h2>Resources</h2>
-    <p class="secondary">
-      For more information about our app, check out our
-      <a href="#">FAQ</a> page and <a href="#">blog</a>.
-    </p>
-    <h2>Legal Information</h2>
-    <p class="secondary">
-      For terms of service and privacy policy please refer to
-      <a href="#">legal page</a>.
-    </p>
-    <h2>Testimonials</h2>
-    <p class="secondary">
-      Check out what other users have to say about our app
-      <a href="#">here</a>.
-    </p>
-    <h2>Roadmap</h2>
-    <p class="secondary">
-      We are constantly working to improve our app and add new features. Check
-      out our <a href="#">roadmap</a> to see what's coming up next.
-    </p>
-    <h2>Partners and Sponsors</h2>
-    <p class="secondary">
-      We are proud to be partnered with and sponsored by some of the top
-      companies in the gaming industry. Check out our
-      <a href="#">partners and sponsors</a> page to learn more.
-    </p>
-  </div>
+  <main class="about page container">
+    <header class="about__header">
+      <span class="eyebrow"><AppIcon name="sparkles" :size="16" /> About</span>
+      <h1 class="about__title">
+        A home for <span class="text-gradient">every game you play</span>
+      </h1>
+      <p class="about__lead">
+        Game Shelf helps you find your next game and remember the ones you've
+        played. It's free and needs no account.
+      </p>
+    </header>
+
+    <section class="features">
+      <article
+        v-for="feature in features"
+        :key="feature.title"
+        v-reveal
+        class="feature"
+      >
+        <span class="feature__icon"><AppIcon :name="feature.icon" /></span>
+        <h2 class="feature__title">{{ feature.title }}</h2>
+        <p>{{ feature.text }}</p>
+      </article>
+    </section>
+
+    <section v-reveal class="notes">
+      <div class="note">
+        <h2>Your data stays with you</h2>
+        <p>
+          Your shelf is saved in your browser's local storage, never on a
+          server. Use <strong>Export</strong> on the
+          <RouterLink :to="{ name: 'shelf' }">My Shelf</RouterLink> page to back
+          it up or move it to another device, and <strong>Import</strong> to
+          bring it back.
+        </p>
+      </div>
+      <div class="note">
+        <h2>Where the data comes from</h2>
+        <p>
+          All game information, images and ratings come from the
+          <a href="https://rawg.io/" target="_blank" rel="noopener"
+            >RAWG Video Games Database</a
+          >, the largest open video game database.
+        </p>
+      </div>
+      <div class="note">
+        <h2>How it's built</h2>
+        <p>
+          Vue 3 with the Composition API, Pinia, Vue Router and VueUse on the
+          front end, and a small Express server that proxies and caches the RAWG
+          API. The source is on
+          <a
+            href="https://github.com/IvanoiuPetrut"
+            target="_blank"
+            rel="noopener"
+            >GitHub</a
+          >.
+        </p>
+      </div>
+    </section>
+  </main>
 </template>
 
 <style lang="scss" scoped>
-@use "@/assets/style/colors.scss" as colors;
-@use "@/assets/style/component.scss" as component;
+@use "@/assets/style/mixins.scss" as mixins;
 
-.about__wrapper {
-  @include component.container;
+.about__header {
+  max-width: 760px;
+  margin-bottom: 4.8rem;
 }
 
-h1 {
-  font-size: 2rem;
-  margin-bottom: 3.2rem;
-  font-weight: 600;
-  letter-spacing: 1px;
-
-  @media (min-width: 768px) {
-    font-size: 2.4rem;
-  }
+.about__title {
+  margin-top: 0.8rem;
+  font-size: clamp(2.4rem, 1.4rem + 3.6vw, 4.4rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
 }
 
-h2 {
-  display: inline-block;
-  letter-spacing: 1px;
-  font-weight: 600;
-  margin-bottom: 1.2rem;
-
-  // before
-  &::after {
-    content: "";
-    display: block;
-    width: 100%;
-    height: 3px;
-    background-color: colors.$primary;
-    margin-bottom: 1.2rem;
-    border-radius: 2px;
-  }
-}
-
-p {
+.about__lead {
+  margin-top: 1.2rem;
   font-size: 1.2rem;
-  line-height: 2.4rem;
-  margin-bottom: 2.4rem;
+  color: var(--neutral-text-secondary);
 }
 
-p.secondary {
-  color: colors.$neutral-text-secondary;
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1.6rem;
+  margin-bottom: 4.8rem;
+}
+
+.feature {
+  @include mixins.glass-panel;
+  padding: 1.8rem;
+
+  p {
+    color: var(--neutral-text-secondary);
+  }
+}
+
+.feature__icon {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 1.2rem;
+  border-radius: var(--r-md);
+  background: var(--accent-transparent);
+  color: var(--accent-strong);
+}
+
+.feature__title {
+  font-size: 1.3rem;
+  margin-bottom: 0.4rem;
+}
+
+.notes {
+  display: grid;
+  gap: 2.4rem;
+
+  @media (min-width: 900px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.note {
+  h2 {
+    font-size: 1.3rem;
+    margin-bottom: 0.6rem;
+  }
+
+  p {
+    color: var(--neutral-text-secondary);
+  }
+
+  strong {
+    color: var(--neutral-text);
+    font-weight: 600;
+  }
 }
 </style>

@@ -1,224 +1,227 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import { useGamesRandomStore } from "@/stores/games-random";
+import { useBackdropStore } from "@/stores/backdrop";
+import { resizedImage } from "@/utils/format";
 import BaseCarousel from "./BaseCarousel.vue";
-import BaseCarouselSlide from "./BaseCarouselSlide.vue";
+import ShelfBookmark from "./ShelfBookmark.vue";
+import ScoreBadge from "./ui/ScoreBadge.vue";
+import ChipTag from "./ui/ChipTag.vue";
+import SkeletonBlock from "./ui/SkeletonBlock.vue";
+import AppIcon from "./ui/AppIcon.vue";
 
 const store = useGamesRandomStore();
+const backdrop = useBackdropStore();
 
-const games = computed((): any[] => {
-  return store.games;
-});
+const current = ref(0);
+const games = computed(() => store.games);
+const game = computed(() => games.value[current.value]);
 
-const slidesNumber = computed((): number => {
-  return games.value.length;
+watch(game, (value) => backdrop.set(value?.background_image), {
+  immediate: true,
 });
 </script>
 
 <template>
   <div class="featured">
-    <BaseCarousel v-slot="{ currentSlide }" :slides="slidesNumber">
-      <BaseCarouselSlide v-for="(game, index) in games" :key="game.id">
-        <router-link
-          :to="{ name: 'gameDetails', params: { id: game.id } }"
-          v-if="currentSlide === index + 1"
-        >
-          <div class="content">
+    <BaseCarousel
+      v-if="games.length > 0"
+      v-model:current="current"
+      :count="games.length"
+      label="Featured games"
+    >
+      <div class="stage">
+        <Transition name="slide">
+          <article v-if="game" :key="game.id" class="slide">
             <img
-              :src="game.background_image"
-              alt="game.name"
-              class="game__img"
-              loading="lazy"
+              :src="resizedImage(game.background_image, 1280)"
+              :alt="game.name"
+              class="slide__art"
             />
-            <div class="game__details">
-              <div class="game__header">
-                <h3 class="game__name">{{ game.name }}</h3>
-                <p class="game__rating">{{ game.metacritic }}</p>
+            <div class="slide__shade"></div>
+            <div class="slide__content">
+              <span class="eyebrow">
+                <AppIcon name="sparkles" :size="16" /> Featured pick
+              </span>
+              <h2 class="slide__title">{{ game.name }}</h2>
+              <div class="slide__meta">
+                <ScoreBadge :score="game.metacritic" />
+                <span v-if="game.released">{{
+                  game.released.slice(0, 4)
+                }}</span>
+                <span v-if="game.playtime">~{{ game.playtime }}h to beat</span>
+                <span v-if="game.rating">★ {{ game.rating.toFixed(1) }}</span>
               </div>
-              <div class="game__details--aside">
-                <div class="details__wrapper">
-                  <p class="details__name">Platforms</p>
-                  <div class="details__platforms">
-                    <span
-                      v-for="(platform, index) in game.platforms"
-                      :key="index"
-                      class="game__platform"
-                    >
-                      {{ platform.platform.name }}
-                    </span>
-                  </div>
-                </div>
-                <div class="details--hiden">
-                  <div class="details__wrapper">
-                    <p class="details__name">Released</p>
-                    <p>{{ game.released }}</p>
-                  </div>
-                  <div class="details__wrapper">
-                    <p class="details__name">Length</p>
-                    <p>{{ game.playtime }} hours</p>
-                  </div>
-                  <div class="screenshots__wrapper">
-                    <div
-                      v-for="(screenshot, index) in game.short_screenshots as any[]"
-                      :key="screenshot.id"
-                    >
-                      <img
-                        v-if="index > 1 && index < 5"
-                        :src="screenshot.image"
-                        alt="game.name"
-                        class="screenshot"
-                        width="200"
-                        height="150"
-                      />
-                    </div>
-                  </div>
-                </div>
+              <div class="slide__chips">
+                <ChipTag
+                  v-for="genre in game.genres.slice(0, 3)"
+                  :key="genre.id"
+                >
+                  {{ genre.name }}
+                </ChipTag>
+              </div>
+              <div class="slide__shots">
+                <img
+                  v-for="shot in game.short_screenshots?.slice(1, 4)"
+                  :key="shot.id"
+                  :src="resizedImage(shot.image, 420)"
+                  alt=""
+                  loading="lazy"
+                />
+              </div>
+              <div class="slide__actions">
+                <RouterLink
+                  :to="{ name: 'gameDetails', params: { id: game.id } }"
+                  class="btn btn--lg"
+                >
+                  View game <AppIcon name="arrow-right" :size="18" />
+                </RouterLink>
+                <ShelfBookmark :game="game" />
               </div>
             </div>
-          </div>
-        </router-link>
-      </BaseCarouselSlide>
+          </article>
+        </Transition>
+      </div>
     </BaseCarousel>
+    <SkeletonBlock
+      v-else
+      height="clamp(460px, 56vw, 620px)"
+      radius="var(--r-lg)"
+    />
   </div>
 </template>
 
 <style lang="scss" scoped>
-@use "@/assets/style/colors.scss" as colors;
 @use "@/assets/style/component.scss" as component;
 
 .featured {
-  margin-bottom: 6.4rem;
-  @media (min-width: 768px) {
-    @include component.container;
-    margin-bottom: 12.6rem;
-  }
+  @include component.container;
+  margin-bottom: clamp(4rem, 8vw, 8rem);
 }
 
-.content {
-  position: relative;
-  cursor: pointer;
-  overflow: hidden;
-  border-radius: 11px;
-
-  &:hover {
-    .game__img {
-      transition: all 0.3s ease-in-out;
-      transform: scale(1.05);
-      filter: blur(0px);
-
-      @media (min-width: 768px) {
-        filter: blur(2px);
-      }
-    }
-    .game__details {
-      transform: translateY(0);
-    }
-  }
+.stage {
+  height: clamp(460px, 56vw, 620px);
+  background: var(--neutral-bg-secondary);
 }
 
-.game__img {
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+}
+
+.slide__art {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: 10.6rem;
+  height: 100%;
   object-fit: cover;
-  border-radius: 11px;
-  transform: scale(1.05);
-
-  @media (min-width: 550px) {
-    height: min(55vw, 500px);
-    width: min(65vw, 1400px);
-  }
+  animation: ken-burns 14s ease-out forwards;
 }
 
-.game__header {
+.slide__shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      0deg,
+      rgb(11 11 18 / 0.95) 0%,
+      rgb(11 11 18 / 0.4) 50%,
+      transparent 80%
+    ),
+    linear-gradient(90deg, rgb(11 11 18 / 0.75) 0%, transparent 60%);
+}
+
+.slide__content {
   display: flex;
-  align-items: baseline;
-  justify-content: center;
-  gap: 1.6rem;
-  padding: 1.2rem 0 0 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: clamp(1.6rem, 4vw, 4rem);
+  max-width: 760px;
 
-  @media (min-width: 768px) {
-    justify-content: flex-start;
-    padding: 0;
+  > * {
+    animation: rise 0.7s var(--ease-out) backwards;
+  }
+
+  @for $i from 2 through 7 {
+    > :nth-child(#{$i}) {
+      animation-delay: #{$i * 0.06}s;
+    }
   }
 }
 
-.game__rating {
-  font-size: 1rem;
+.slide__title {
+  font-size: clamp(2rem, 1.2rem + 3.6vw, 4rem);
   font-weight: 700;
-  color: colors.$neutral-text;
-  background-color: colors.$accent-transparent;
-  padding: 0 0.8rem;
-  border-radius: 7px;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-shadow: 0 4px 30px rgb(0 0 0 / 0.5);
+}
+
+.slide__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.2rem;
+  color: var(--neutral-text-secondary);
+  font-weight: 600;
+}
+
+.slide__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.slide__shots {
   display: none;
-
-  @media (min-width: 550px) {
-    display: block;
-  }
-
-  @media (min-width: 768px) {
-    font-size: 1.4rem;
-  }
-}
-.game__details {
-  @media (min-width: 768px) {
-    padding: 1.2rem;
-    position: absolute;
-    bottom: 0;
-    height: 70%;
-    width: 100%;
-    border-radius: 0 0 11px 11px;
-    transition: all 0.3s ease-in-out;
-    transform: translateY(73%);
-    background: colors.$neutral-gradient;
-  }
-}
-
-.game__details--aside {
-  display: none;
-  @media (min-width: 768px) {
-    display: block;
-  }
-}
-.game__name {
-  // font-size: 1.4rem;
-  font-size: 1rem;
-  font-weight: 700;
-  text-align: center;
-  color: colors.$neutral-text;
-
-  @media (min-width: 768px) {
-    font-size: 1.6rem;
-  }
-}
-
-.details__wrapper {
-  display: flex;
-  align-items: baseline;
   gap: 0.8rem;
-  color: colors.$neutral-text-secondary;
-}
 
-.details__platforms {
-  display: flex;
-  gap: 0.8rem;
-}
+  @media (min-width: 900px) {
+    display: flex;
+  }
 
-.details__name {
-  color: colors.$neutral-text-secondary;
-  font-size: 1.2rem;
-  font-weight: 700;
-}
-
-.screenshots__wrapper {
-  display: flex;
-  justify-content: center;
-  gap: 0.8rem;
-  margin-top: 1.6rem;
-
-  .screenshot {
-    border-radius: 7px;
+  img {
+    width: 150px;
+    aspect-ratio: 16 / 9;
     object-fit: cover;
-    width: min(20vw, 200px);
+    border-radius: var(--r-sm);
+    border: 1px solid var(--border-glass);
+  }
+}
+
+.slide__actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.4rem;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: opacity 0.7s ease;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  opacity: 0;
+}
+
+@keyframes ken-burns {
+  from {
+    transform: scale(1.12);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
   }
 }
 </style>
