@@ -1,1 +1,1 @@
-export const API_URL = "https://game-shelf-server-production.up.railway.app";
+export const API_URL = import.meta.env.VITE_API_URL ?? "/api";

@@ -17,7 +17,7 @@ export default {
   },
 
   setup(props) {
-    const gamesFromProps = computed((): any => {
+    const gamesFromProps = computed((): any[] => {
       return props.games;
     });
 

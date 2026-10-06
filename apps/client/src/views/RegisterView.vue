@@ -82,7 +82,7 @@ h1 {
   }
 }
 
-.form >>> .form__btn {
+.form :deep(.form__btn) {
   width: 100%;
   margin-top: 1.2rem;
   padding: 1rem 0;
