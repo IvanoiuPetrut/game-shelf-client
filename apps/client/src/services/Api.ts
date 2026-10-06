@@ -1,7 +1,8 @@
 import axios from "axios";
+import { API_URL } from "@/api";
 
 export default () => {
   return axios.create({
-    baseURL: "http://localhost:8080",
+    baseURL: API_URL,
   });
 };

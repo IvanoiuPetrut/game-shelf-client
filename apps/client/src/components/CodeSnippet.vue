@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Prism from "prismjs";
+import "prismjs/themes/prism.css";
 import { onMounted } from "vue";
 
 onMounted(() => {

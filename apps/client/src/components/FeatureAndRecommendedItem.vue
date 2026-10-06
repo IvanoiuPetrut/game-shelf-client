@@ -6,7 +6,7 @@ import BaseCarouselSlide from "./BaseCarouselSlide.vue";
 
 const store = useGamesRandomStore();
 
-const games = computed((): any => {
+const games = computed((): any[] => {
   return store.games;
 });
 
@@ -59,7 +59,7 @@ const slidesNumber = computed((): number => {
                   </div>
                   <div class="screenshots__wrapper">
                     <div
-                      v-for="(screenshot, index) in game.short_screenshots"
+                      v-for="(screenshot, index) in game.short_screenshots as any[]"
                       :key="screenshot.id"
                     >
                       <img
