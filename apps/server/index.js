@@ -22,7 +22,6 @@ const app = express();
 if (process.env.NODE_ENV !== "production") {
   app.use(cors());
 }
-app.use(express.json());
 
 // * API Routes
 
@@ -30,7 +29,7 @@ const api = express.Router();
 api.use("/games", require("./routes/games"));
 api.use("/developers", require("./routes/developers"));
 api.use("/publishers", require("./routes/publishers"));
-api.use("/user", require("./routes/user"));
+api.use("/genres", require("./routes/genres"));
 api.use((req, res) => {
   res.status(404).send({ message: "Not found" });
 });

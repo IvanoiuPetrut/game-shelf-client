@@ -10,8 +10,6 @@ defineProps({
     default: "",
   },
 });
-
-defineEmits(["update:modelValue", "focus"]);
 </script>
 
 <template>

@@ -18,6 +18,14 @@ router.get("/:id/movies", (req, res) => {
   proxyToRawg(`/games/${req.params.id}/movies`, req, res);
 });
 
+router.get("/:id/game-series", (req, res) => {
+  proxyToRawg(`/games/${req.params.id}/game-series`, req, res);
+});
+
+router.get("/:id/additions", (req, res) => {
+  proxyToRawg(`/games/${req.params.id}/additions`, req, res);
+});
+
 // get store links
 router.get("/:id/stores", (req, res) => {
   proxyToRawg(`/games/${req.params.id}/stores`, req, res);
