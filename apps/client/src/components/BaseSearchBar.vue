@@ -1,78 +1,90 @@
 <script setup lang="ts">
-import IconSearchNormal from "@/components/icons/IconSearchNormal.vue";
-defineProps({
-  label: {
-    type: String,
-    default: "",
-  },
-  modelValue: {
-    type: [String, Number],
-    default: "",
-  },
-});
+import { ref } from "vue";
+import AppIcon from "./ui/AppIcon.vue";
 
-defineEmits(["update:modelValue", "focus"]);
+defineOptions({ inheritAttrs: false });
+
+defineProps<{ label: string; shortcut?: string }>();
+const model = defineModel<string>({ default: "" });
+
+const input = ref<HTMLInputElement | null>(null);
+defineExpose({ focus: () => input.value?.focus() });
 </script>
 
 <template>
-  <div class="input__wrapper">
+  <div class="search">
+    <AppIcon name="search" :size="18" class="search__icon" />
     <input
-      class="game__input"
-      type="text"
+      ref="input"
+      v-model="model"
       v-bind="$attrs"
+      class="search__input"
+      type="search"
       :placeholder="label"
-      :value="modelValue"
-      @input="
-        $emit('update:modelValue', ($event.target as HTMLInputElement).value)
-      "
+      :aria-label="label"
+      autocomplete="off"
     />
-    <IconSearchNormal class="icon" />
+    <kbd v-if="shortcut && !model" class="search__kbd">{{ shortcut }}</kbd>
   </div>
 </template>
 
 <style lang="scss" scoped>
-@use "@/assets/style/colors.scss" as colors;
-
-.input__wrapper {
-  position: relative;
+.search {
+  display: flex;
+  align-items: center;
 }
 
-.game__input {
+.search__input {
   width: 100%;
-  padding: 0.6rem 0.6rem 0.6rem 2.4rem;
-  border-radius: 100px;
-  border: 2px solid colors.$neutral-text-secondary;
-  background-color: colors.$neutral-bg-secondary;
-  color: colors.$neutral-text;
+  padding: 0.6rem 2.4rem 0.6rem 2.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-glass);
+  background: rgb(255 255 255 / 0.05);
+  color: var(--neutral-text);
+  font: inherit;
   font-size: 1rem;
-  transition: all 0.3s ease-in-out;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s,
+    box-shadow 0.2s;
 
   &::placeholder {
-    color: colors.$neutral-text-secondary;
+    color: var(--neutral-text-secondary);
+  }
+
+  &::-webkit-search-cancel-button {
+    display: none;
   }
 
   &:focus {
     outline: none;
-    border: 2px solid colors.$accent;
-  }
-
-  &:focus ~ .icon {
-    color: colors.$accent;
-  }
-
-  @media (min-width: 750px) {
-    width: 150%;
+    border-color: var(--accent);
+    background: rgb(255 255 255 / 0.08);
+    box-shadow: 0 0 0 4px var(--accent-transparent);
   }
 }
 
-.icon {
+.search__icon {
   position: absolute;
-  bottom: 50%;
-  transform: translateY(50%);
-  left: 0.6rem;
-  color: colors.$neutral-text-secondary;
-  z-index: 999;
+  left: 0.9rem;
+  color: var(--neutral-text-secondary);
+  pointer-events: none;
+  z-index: 1;
+}
 
-  transition: all 0.3s ease-in-out;
+.search:focus-within .search__icon {
+  color: var(--accent-strong);
+}
+
+.search__kbd {
+  position: absolute;
+  right: 0.9rem;
+  padding: 0 0.45rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-glass);
+  font-family: inherit;
+  font-size: 0.8rem;
+  color: var(--neutral-text-secondary);
+  pointer-events: none;
 }
 </style>

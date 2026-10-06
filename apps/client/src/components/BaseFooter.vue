@@ -1,127 +1,143 @@
+<script setup lang="ts">
+import IconBook from "./icons/IconBook.vue";
+
+const year = new Date().getFullYear();
+</script>
+
 <template>
-  <div class="footer__wrapper">
-    <footer class="footer">
-      <div class="footer__section">
-        <div>
-          <h3>Join the community</h3>
-          <ul>
-            <li>
-              <a href="#">Twitter</a>
-            </li>
-            <li>
-              <a href="#">Facebook</a>
-            </li>
-            <li>
-              <a href="#">Instagram</a>
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h3>Useful Links</h3>
-          <ul>
-            <li>
-              <router-link to="/">Home</router-link>
-            </li>
-            <li>
-              <router-link
-                :to="{ name: 'category', params: { category: 'default' } }"
-              >
-                Categories
-              </router-link>
-            </li>
-            <li>
-              <router-link :to="{ name: 'about' }">About</router-link>
-            </li>
-            <li>
-              <router-link :to="{ name: 'register' }">Register</router-link>
-            </li>
-          </ul>
-        </div>
-        <div class="span--2">
-          <h3>Game Shelf</h3>
-          <div class="description">
-            <p>
-              Game Shelf is a project created by
-              <a
-                href="
-                https://www.linkedin.com/in/ivanoiu-petrut-dragos/
-            "
-                target="_blank"
-                >Petrut</a
-              >
-            </p>
-            <p>
-              See my projects on my
-              <a href="https://github.com/IvanoiuPetrut" target="_blank"
-                >Github Page</a
-              >
-            </p>
-            <p>
-              Source of data is
-              <a href="https://rawg.io/" target="_blank">RAWG</a>
-            </p>
-          </div>
-        </div>
+  <footer class="footer">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <RouterLink to="/" class="footer__logo">
+          <IconBook class="footer__icon" /> Game Shelf
+        </RouterLink>
+        <p class="footer__tagline">
+          Discover games, see what's coming next and keep track of everything
+          you play.
+        </p>
       </div>
-      <p class="coppyright">&copy; 2022 GameShelf. All rights reserved.</p>
-    </footer>
-  </div>
+
+      <div>
+        <h3>Explore</h3>
+        <ul>
+          <li>
+            <RouterLink :to="{ name: 'category', params: { category: 'all' } }">
+              Browse games
+            </RouterLink>
+          </li>
+          <li>
+            <RouterLink :to="{ name: 'upcoming' }"
+              >Upcoming releases</RouterLink
+            >
+          </li>
+          <li>
+            <RouterLink :to="{ name: 'surprise' }">Surprise me</RouterLink>
+          </li>
+          <li><RouterLink :to="{ name: 'shelf' }">My Shelf</RouterLink></li>
+          <li><RouterLink :to="{ name: 'about' }">About</RouterLink></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3>Credits</h3>
+        <ul>
+          <li>
+            Game data from
+            <a href="https://rawg.io/" target="_blank" rel="noopener">RAWG</a>
+          </li>
+          <li>
+            Made by
+            <a
+              href="https://www.linkedin.com/in/ivanoiu-petrut-dragos/"
+              target="_blank"
+              rel="noopener"
+              >Petrut</a
+            >
+          </li>
+          <li>
+            <a
+              href="https://github.com/IvanoiuPetrut"
+              target="_blank"
+              rel="noopener"
+            >
+              More projects on GitHub
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <p class="footer__copyright">&copy; {{ year }} Game Shelf</p>
+  </footer>
 </template>
 
 <style lang="scss" scoped>
-@use "@/assets/style/colors.scss" as colors;
 @use "@/assets/style/component.scss" as component;
 
-.footer__wrapper {
-  background-color: colors.$neutral-bg-secondary;
-  padding-top: 4rem;
-  margin-top: 9.6rem;
-}
-
 .footer {
-  @include component.container;
+  margin-top: 9.6rem;
+  border-top: 1px solid var(--border-glass);
+  background: linear-gradient(180deg, rgb(21 22 33 / 0.6), var(--neutral-bg));
 }
 
-.footer__section {
+.footer__inner {
+  @include component.container;
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 2.4rem;
+  gap: 3.2rem;
+  padding-block: 4.8rem 3.2rem;
 
-  @media (min-width: 1000px) {
-    grid-template-columns: repeat(3, 1fr);
+  @media (min-width: 800px) {
+    grid-template-columns: 2fr 1fr 1fr;
   }
 
   h3 {
-    font-size: 1.6rem;
-    margin-bottom: 1.6rem;
-    position: relative;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--neutral-text-secondary);
+    margin-bottom: 1.2rem;
+  }
 
-    &::after {
-      content: "";
-      display: block;
-      width: 6.4rem;
-      height: 0.2rem;
-      background-color: colors.$primary;
-      margin-top: 0.8rem;
-      border-radius: 7px;
-      position: absolute;
-      bottom: -4px;
+  ul {
+    display: grid;
+    gap: 0.6rem;
+    color: var(--neutral-text-secondary);
+  }
+
+  a {
+    color: var(--neutral-text);
+
+    &:hover {
+      color: var(--accent-strong);
     }
   }
 }
 
-.description {
-  color: colors.$neutral-text-secondary;
+.footer__logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
 }
 
-.coppyright {
-  text-align: center;
-  margin-top: 2.4rem;
-  padding: 0.8rem 0;
-  color: colors.$neutral-text-secondary;
+.footer__icon {
+  width: 1.6rem;
+  height: 1.6rem;
+  color: var(--accent-strong);
+}
 
-  @media (min-width: 1000px) {
-    margin-top: 4rem;
-  }
+.footer__tagline {
+  margin-top: 0.8rem;
+  max-width: 36ch;
+  color: var(--neutral-text-secondary);
+}
+
+.footer__copyright {
+  padding: 1.6rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--neutral-text-secondary);
+  border-top: 1px solid var(--border-glass);
 }
 </style>

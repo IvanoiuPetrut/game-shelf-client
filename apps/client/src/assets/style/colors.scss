@@ -1,14 +1,24 @@
-$accent: #733ec9;
-$accent-transparent: rgba(115, 62, 201, 0.2);
-$primary: #3f51b5;
-$error: #f44336;
-$error-transparent: rgba(244, 67, 54, 0.5);
+// The design tokens are CSS custom properties defined on :root in base.scss.
+// These SCSS aliases let component styles refer to them by name.
 
-$neutral-bg: #12121b;
-$neutral-bg-secondary: #1a1b25;
+$accent: var(--accent);
+$accent-strong: var(--accent-strong);
+$accent-transparent: var(--accent-transparent);
+$cyan: var(--cyan);
+$primary: var(--primary);
+$success: var(--success);
+$warning: var(--warning);
+$error: var(--error);
+$error-transparent: var(--error-transparent);
 
-$neutral-text: #fdfcff;
-$neutral-text-secondary: #b3b3b3;
+$neutral-bg: var(--neutral-bg);
+$neutral-bg-secondary: var(--neutral-bg-secondary);
+$surface-glass: var(--surface-glass);
+$border-glass: var(--border-glass);
+
+$neutral-text: var(--neutral-text);
+$neutral-text-secondary: var(--neutral-text-secondary);
 
 $accent-gradient: linear-gradient(360deg, $accent, rgba(0, 0, 0, 0));
 $neutral-gradient: linear-gradient(360deg, $neutral-bg, rgba(0, 0, 0, 0.7));
+$brand-gradient: var(--brand-gradient);

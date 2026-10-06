@@ -1,105 +1,195 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import IconArrowLeft from "./icons/IconArrowLeft.vue";
-import IconArrowRight from "./icons/IconArrowRight.vue";
+import { computed, onBeforeUnmount, useTemplateRef, watch } from "vue";
+import {
+  useDocumentVisibility,
+  useElementHover,
+  useFocusWithin,
+  usePreferredReducedMotion,
+  useSwipe,
+} from "@vueuse/core";
+import AppIcon from "./ui/AppIcon.vue";
 
-const props = defineProps({
-  slides: {
-    type: Number,
-    default: 0,
+const props = withDefaults(
+  defineProps<{
+    count: number;
+    label: string;
+    interval?: number;
+  }>(),
+  { interval: 7000 },
+);
+
+const current = defineModel<number>("current", { default: 0 });
+
+const root = useTemplateRef<HTMLElement>("root");
+const isHovered = useElementHover(root);
+const { focused } = useFocusWithin(root);
+const visibility = useDocumentVisibility();
+const reducedMotion = usePreferredReducedMotion();
+
+const paused = computed(
+  () =>
+    isHovered.value ||
+    focused.value ||
+    visibility.value === "hidden" ||
+    reducedMotion.value === "reduce",
+);
+
+const go = (index: number) => {
+  if (props.count === 0) return;
+  current.value = (index + props.count) % props.count;
+};
+const next = () => go(current.value + 1);
+const prev = () => go(current.value - 1);
+
+// Autoplay keeps track of the time left on the current slide, so pausing and
+// resuming lines up with the progress bar animation.
+let timer: ReturnType<typeof setTimeout> | undefined;
+let remaining = props.interval;
+let startedAt = 0;
+
+const start = () => {
+  clearTimeout(timer);
+  if (paused.value || props.count < 2) return;
+  startedAt = Date.now();
+  timer = setTimeout(next, remaining);
+};
+
+const pause = () => {
+  clearTimeout(timer);
+  remaining = Math.max(0, remaining - (Date.now() - startedAt));
+};
+
+watch(
+  [current, () => props.count],
+  () => {
+    remaining = props.interval;
+    start();
+  },
+  { immediate: true },
+);
+watch(paused, (isPaused) => (isPaused ? pause() : start()));
+onBeforeUnmount(() => clearTimeout(timer));
+
+useSwipe(root, {
+  threshold: 40,
+  onSwipeEnd(_event, direction) {
+    if (direction === "left") next();
+    if (direction === "right") prev();
   },
 });
-
-const currentSlide = ref(1);
-
-const nextSlide = () => {
-  currentSlide.value === props.slides
-    ? (currentSlide.value = 1)
-    : currentSlide.value++;
-};
-
-const previousSlide = () => {
-  currentSlide.value === 1
-    ? (currentSlide.value = props.slides)
-    : currentSlide.value--;
-};
-
-const goToSlide = (slide: number) => {
-  currentSlide.value = slide;
-};
 </script>
 
 <template>
-  <div class="carousel">
-    <div class="carousel__content">
-      <button @click="previousSlide()" class="btn">
-        <IconArrowLeft></IconArrowLeft>
-      </button>
-      <slot :currentSlide="currentSlide"></slot>
-      <button @click="nextSlide()" class="btn">
-        <IconArrowRight></IconArrowRight>
-      </button>
+  <section
+    ref="root"
+    class="carousel"
+    aria-roledescription="carousel"
+    :aria-label="label"
+    @keydown.left.prevent="prev"
+    @keydown.right.prevent="next"
+  >
+    <div class="carousel__viewport">
+      <slot :current="current" />
     </div>
 
-    <div class="carousel__pagination">
-      <span
-        v-for="(slide, index) in props.slides"
-        :key="index"
-        :class="{ active: currentSlide === index + 1 }"
-        @click="goToSlide(index + 1)"
+    <div v-if="count > 1" class="carousel__controls">
+      <button
+        class="btn btn--ghost btn--icon"
+        aria-label="Previous slide"
+        @click="prev"
       >
-      </span>
+        <AppIcon name="chevron-left" :size="20" />
+      </button>
+      <div class="carousel__indicators">
+        <button
+          v-for="index in count"
+          :key="index"
+          class="indicator"
+          :class="{ 'indicator--active': current === index - 1 }"
+          :aria-label="`Go to slide ${index}`"
+          :aria-current="current === index - 1"
+          @click="go(index - 1)"
+        >
+          <span
+            v-if="current === index - 1"
+            class="indicator__fill"
+            :style="{
+              animationDuration: `${interval}ms`,
+              animationPlayState: paused ? 'paused' : 'running',
+            }"
+          ></span>
+        </button>
+      </div>
+      <button
+        class="btn btn--ghost btn--icon"
+        aria-label="Next slide"
+        @click="next"
+      >
+        <AppIcon name="chevron-right" :size="20" />
+      </button>
     </div>
-  </div>
+  </section>
 </template>
 
 <style lang="scss" scoped>
-@use "@/assets/style/colors.scss" as colors;
-// @use "@/assets/style/component.scss" as component;
-.carousel {
-  &__content {
-    // @include component.container;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 2.4rem;
-    position: relative;
-    height: 100%;
+.carousel__viewport {
+  overflow: hidden;
+  border-radius: var(--r-lg);
+}
 
-    .btn {
-      padding: 0;
-      background: none;
+.carousel__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  margin-top: 1.2rem;
+}
 
-      @media (min-width: 550px) {
-        padding: 0.5rem 1rem;
-        background-color: colors.$accent;
-      }
-    }
+.carousel__indicators {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.indicator {
+  width: 1.2rem;
+  height: 0.35rem;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.15);
+  overflow: hidden;
+  cursor: pointer;
+  transition:
+    width 0.4s var(--ease-out),
+    background-color 0.2s;
+
+  &:hover {
+    background: rgb(255 255 255 / 0.3);
   }
 
-  .carousel__pagination {
-    display: flex;
-    gap: 0.8rem;
-    position: absolute;
-    bottom: -25px;
-    left: 50%;
-    transform: translateX(-50%);
+  &--active {
+    width: 3.2rem;
+  }
+}
 
-    span {
-      width: min(3vw, 1.6rem);
-      height: min(0.5rem, 5vw);
-      border-radius: 100px;
-      background-color: colors.$neutral-bg-secondary;
-      cursor: pointer;
+.indicator__fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--brand-gradient);
+  transform-origin: left;
+  animation: fill linear forwards;
+}
 
-      &:hover {
-        box-shadow: colors.$primary 0px 0px 0px 3px;
-      }
+@media (prefers-reduced-motion: reduce) {
+  .indicator__fill {
+    animation: none;
+  }
+}
 
-      &.active {
-        background-color: colors.$accent;
-      }
-    }
+@keyframes fill {
+  from {
+    transform: scaleX(0);
   }
 }
 </style>

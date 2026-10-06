@@ -1,60 +1,72 @@
 <script lang="ts" setup>
-import { ref } from "vue";
+import { useId } from "vue";
+import AppIcon from "./ui/AppIcon.vue";
 
-const props = defineProps<{
-  label: string;
-  modelValue: boolean;
-}>();
+defineProps<{ label: string }>();
+const checked = defineModel<boolean>({ default: false });
 
-const valueOfCheckBox = ref(props.modelValue);
+const id = useId();
 </script>
 
 <template>
-  <div>
-    <div class="form__field">
-      <input
-        type="checkbox"
-        class="form__input"
-        v-bind="$attrs"
-        :id="label"
-        :true-value="true"
-        :false-value="false"
-        v-model="valueOfCheckBox"
-        @input="$emit('update:modelValue', valueOfCheckBox)"
-      />
-      <label :for="label" class="form__label">{{ label }}</label>
-    </div>
+  <div class="field">
+    <input :id="id" v-model="checked" type="checkbox" class="field__input" />
+    <label :for="id" class="field__label">
+      <span class="field__box" aria-hidden="true">
+        <AppIcon name="check" :size="12" />
+      </span>
+      {{ label }}
+    </label>
   </div>
 </template>
 
 <style scoped lang="scss">
-@use "@/assets/style/colors.scss" as colors;
+.field__input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
 
-.form__field {
+.field__label {
   display: flex;
   align-items: center;
-  gap: 1.2rem;
-}
-
-.form__input {
-  width: 0.8rem;
-  height: 0.8rem;
-  border: 1px solid colors.$neutral-text-secondary;
-  border-radius: 0.2rem;
-  outline: none;
+  gap: 0.7rem;
+  padding: 0.25rem 0;
+  color: var(--neutral-text-secondary);
   cursor: pointer;
-  transition: all 0.3s ease-in-out;
+  transition: color 0.2s;
 
-  &:checked {
-    background-color: colors.$primary;
+  &:hover {
+    color: var(--neutral-text);
   }
 }
-.form__label {
-  font-size: 1.2rem;
-  color: colors.$neutral-text-secondary;
-  &:hover {
-    cursor: pointer;
-    color: colors.$accent;
+
+.field__box {
+  display: grid;
+  place-items: center;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 5px;
+  border: 1.5px solid rgb(255 255 255 / 0.25);
+  color: transparent;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    color 0.2s;
+}
+
+.field__input:checked + .field__label {
+  color: var(--neutral-text);
+
+  .field__box {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
   }
+}
+
+.field__input:focus-visible + .field__label .field__box {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 2px;
 }
 </style>

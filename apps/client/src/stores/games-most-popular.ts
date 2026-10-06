@@ -1,27 +1,13 @@
-import { defineStore } from "pinia";
-import axios from "axios";
-import { API_URL } from "@/api";
+import { defineGameListStore } from "@/stores/game-list";
+import { addDays, isoDate } from "@/utils/format";
 
-export const useGamesMostPopularStore = defineStore("MostPopular", {
-  state: () => ({
-    games: [],
+// The games most added to RAWG libraries over the past year
+export const useGamesMostPopularStore = defineGameListStore(
+  "MostPopular",
+  () => ({
+    ordering: "-added",
+    page_size: 12,
+    exclude_additions: true,
+    dates: `${isoDate(addDays(new Date(), -365))},${isoDate(new Date())}`,
   }),
-
-  actions: {
-    async fetchGames() {
-      axios
-        .get(`${API_URL}/games`, {
-          params: {
-            ordering: "-rating",
-            platforms: "1",
-            page_size: "10",
-            exclude_additions: "true",
-            // dates: "2019-01-01,2099-11-01",
-          },
-        })
-        .then((response) => {
-          this.games = response.data.results;
-        });
-    },
-  },
-});
+);

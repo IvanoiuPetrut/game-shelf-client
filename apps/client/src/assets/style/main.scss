@@ -1,41 +1,32 @@
 @use "./colors.scss";
 @use "./base.scss";
+@use "./mixins.scss";
+@use "./component.scss";
 
 #app {
   margin: 0 auto;
-
   font-weight: normal;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 a {
   display: inline-block;
   text-decoration: none;
   color: colors.$primary;
-  transition: 0.4s;
+  transition: color 0.3s;
 }
 
 a:hover {
-  color: colors.$accent;
+  color: colors.$accent-strong;
 }
 
-.btn {
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  border-radius: 7px;
-  border: none;
-  background-color: colors.$accent;
-  color: colors.$neutral-text;
-  transition: all ease-in-out 0.3s;
-  cursor: pointer;
-
-  &:hover {
-    background-color: colors.$accent-transparent;
-  }
-}
-
-.icon {
-  width: 1.5rem;
-  height: 1.5rem;
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
 }
 
 h2 {
@@ -45,4 +36,153 @@ h2 {
 ul {
   list-style: none;
   padding: 0;
+}
+
+button {
+  font-family: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid colors.$accent-strong;
+  outline-offset: 3px;
+}
+
+.container {
+  @include component.container;
+}
+
+.page {
+  padding-top: 3.2rem;
+}
+
+// * Buttons
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background-color: colors.$accent;
+  color: colors.$neutral-text;
+  font-size: 1rem;
+  font-weight: 600;
+  transition:
+    background-color 0.25s,
+    box-shadow 0.25s,
+    transform 0.25s,
+    border-color 0.25s;
+  cursor: pointer;
+
+  &:hover {
+    color: colors.$neutral-text;
+    background-color: colors.$accent-strong;
+    box-shadow: var(--glow-accent);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  &--lg {
+    padding: 0.8rem 1.6rem;
+    font-size: 1.1rem;
+  }
+
+  &--ghost {
+    background-color: rgb(255 255 255 / 0.06);
+    border-color: colors.$border-glass;
+    backdrop-filter: blur(10px);
+
+    &:hover {
+      background-color: rgb(255 255 255 / 0.12);
+      box-shadow: none;
+    }
+  }
+
+  &--icon {
+    padding: 0.5rem;
+    aspect-ratio: 1;
+  }
+}
+
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.text-gradient {
+  background: colors.$brand-gradient;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: colors.$accent-strong;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+// * Motion helpers used by the v-tilt and v-reveal directives
+
+.tilt {
+  transform: perspective(900px) rotateX(var(--tilt-x, 0deg))
+    rotateY(var(--tilt-y, 0deg));
+  transition: transform 0.25s var(--ease-out);
+  will-change: transform;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      circle at var(--glare-x, 50%) var(--glare-y, 50%),
+      rgb(255 255 255 / 0.22),
+      transparent 55%
+    );
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+
+  &:hover::after {
+    opacity: 1;
+  }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s var(--ease-out),
+    transform 0.7s var(--ease-out);
+
+  &.is-revealed {
+    opacity: 1;
+    transform: none;
+  }
 }
