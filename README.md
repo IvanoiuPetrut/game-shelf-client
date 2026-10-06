@@ -10,16 +10,18 @@ Game Shelf is a Web App that allows you to search for games and get information 
 
 ## Features
 
-- Get a list of customized games based on a certain criteria
-- Search for a specific game using various categories utilities
-- Get details about a game
-- Get a list of games made by a specific developer
-- Get a list of games published by a specific publisher
+- Discover games through curated rails: critically acclaimed, trending and coming soon
+- Search from anywhere (press `/`) and browse with genre, platform, tag and store filters
+- Game pages with ratings breakdown, screenshots, store links, and games from the same series or DLC
+- **My Shelf**: track games as playing, completed, wishlist or dropped, rate them and see your stats. The shelf is stored in your browser and can be exported and imported as JSON
+- **Upcoming releases**: a month-by-month timeline of the next six months
+- **Surprise me**: a random picker for well-reviewed games
+- Developer and publisher pages
 
 ## Technologies
 
 - Vue 3 - Composition API
-- Pinia
+- Pinia, Vue Router, VueUse
 - Axios
 - HTML5
 - CSS3, SASS
