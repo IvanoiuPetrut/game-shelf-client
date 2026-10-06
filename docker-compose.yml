@@ -1,0 +1,8 @@
+services:
+  game-shelf:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      RAWG_API_KEY: ${RAWG_API_KEY:?Set RAWG_API_KEY}
+    restart: unless-stopped
