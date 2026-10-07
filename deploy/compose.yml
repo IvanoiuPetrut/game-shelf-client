@@ -1,5 +1,6 @@
 # Production stack. The deploy workflow copies this file to ~/apps/game-shelf on the VPS,
-# where Traefik routes game-shelf.petrut.dev to it. RAWG_API_KEY lives in the .env next to it.
+# where Traefik routes game-shelf.petrut.dev to it. The workflow writes the .env next to it
+# from the RAWG_API_KEY repository secret.
 name: game-shelf
 
 services:

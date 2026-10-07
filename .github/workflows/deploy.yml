@@ -55,9 +55,13 @@ jobs:
         env:
           TARGET: ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RAWG_API_KEY: ${{ secrets.RAWG_API_KEY }}
         run: |
+          if [ -z "$RAWG_API_KEY" ]; then echo "::error::Add the RAWG_API_KEY repository secret"; exit 1; fi
           ssh "$TARGET" "mkdir -p ~/$APP_DIR"
           scp deploy/compose.yml "$TARGET:$APP_DIR/compose.yml"
+          # The .env is rebuilt from repository secrets on every deploy
+          printf 'RAWG_API_KEY=%s\n' "$RAWG_API_KEY" | ssh "$TARGET" "umask 077 && cat > ~/$APP_DIR/.env"
           # The registry token goes in over stdin to a throwaway Docker config, so it never stays on the VPS
           printf '%s' "$GHCR_TOKEN" | ssh "$TARGET" "set -e
             export DOCKER_CONFIG=\$(mktemp -d) IMAGE_TAG=$GITHUB_SHA
