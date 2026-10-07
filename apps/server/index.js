@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const { rateLimit } = require("express-rate-limit");
+const helmet = require("helmet");
+const http = require("http");
 const path = require("path");
 
 // Load apps/server/.env when present (local development)
@@ -25,9 +27,35 @@ const parseTrustProxy = (value) => {
 };
 
 const app = express();
+app.disable("x-powered-by");
 app.set("trust proxy", parseTrustProxy(process.env.TRUST_PROXY));
 
 // * Middlewares
+
+// Security headers. The CSP allows the hosts the client loads from: Google
+// Fonts, RAWG's image CDN, and trailers, which RAWG serves from varying CDNs.
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        imgSrc: ["'self'", "data:", "https://media.rawg.io"],
+        mediaSrc: ["'self'", "https:"],
+        connectSrc: ["'self'"],
+        objectSrc: ["'none'"],
+        baseUri: ["'self'"],
+        formAction: ["'self'"],
+        frameAncestors: ["'none'"],
+        upgradeInsecureRequests: null,
+      },
+    },
+    referrerPolicy: { policy: "strict-origin-when-cross-origin" },
+    xFrameOptions: { action: "deny" },
+  }),
+);
 
 // The built client is served from this same origin in production, so CORS is
 // only needed when running the client from another origin during development.
@@ -67,6 +95,15 @@ app.get("/{*splat}", (req, res) => {
   res.sendFile(path.join(STATIC_DIR, "index.html"), (err) => {
     if (err) res.status(404).send("Client build not found");
   });
+});
+
+// Generic errors (e.g. a malformed URL) never echo details or stack traces
+// back to the client, whatever NODE_ENV is set to.
+app.use((err, req, res, next) => {
+  if (res.headersSent) return next(err);
+  const status = err.status >= 400 && err.status < 600 ? err.status : 500;
+  if (status >= 500) console.error(err);
+  res.status(status).send({ message: http.STATUS_CODES[status] });
 });
 
 // * Server
