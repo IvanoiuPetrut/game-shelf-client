@@ -18,7 +18,7 @@ import type {
 } from "@/types/rawg";
 import { useBackdropStore } from "@/stores/backdrop";
 import { formatDate, resizedImage } from "@/utils/format";
-import { sanitizeHtml } from "@/utils/sanitize";
+import { safeUrl, sanitizeHtml } from "@/utils/sanitize";
 import ScoreBadge from "@/components/ui/ScoreBadge.vue";
 import ChipTag from "@/components/ui/ChipTag.vue";
 import SkeletonBlock from "@/components/ui/SkeletonBlock.vue";
@@ -61,11 +61,14 @@ const stores = computed(() =>
   (game.value?.stores ?? []).map(({ store }) => ({
     id: store.id,
     name: store.name,
-    url:
+    url: safeUrl(
       storeLinks.value.find((link) => link.store_id === store.id)?.url ??
-      (store.domain ? `https://${store.domain}` : undefined),
+        (store.domain ? `https://${store.domain}` : undefined),
+    ),
   })),
 );
+
+const website = computed(() => safeUrl(game.value?.website));
 
 const description = computed(() => sanitizeHtml(game.value?.description));
 
@@ -281,10 +284,10 @@ onMounted(loadGame);
               </template>
               <dt>Released</dt>
               <dd>{{ game.tba ? "TBA" : formatDate(game.released) }}</dd>
-              <template v-if="game.website">
+              <template v-if="website">
                 <dt>Website</dt>
                 <dd>
-                  <a :href="game.website" target="_blank" rel="noopener">
+                  <a :href="website" target="_blank" rel="noopener">
                     Official site <AppIcon name="external" :size="14" />
                   </a>
                 </dd>
