@@ -24,7 +24,9 @@ const GENRES = [
 
 const PAGE_SIZE = 40;
 const MAX_PAGE = 25;
-const SPIN_STEPS = 18;
+// The dice spin at least this long, so a cached pick doesn't just blink in
+const MIN_ROLL_MS = 700;
+const COVER_WIDTH = 640;
 
 const shelf = useShelfStore();
 const toast = useToastStore();
@@ -33,8 +35,6 @@ const reducedMotion = usePreferredReducedMotion();
 
 const genre = ref<string | null>(null);
 const pool = ref<GameSummary[]>([]);
-const reel = ref<GameSummary[]>([]);
-const reelIndex = ref(0);
 const pick = ref<GameSummary | null>(null);
 const spinning = ref(false);
 const error = ref<string | null>(null);
@@ -43,13 +43,21 @@ const error = ref<string | null>(null);
 const pageCounts = new Map<string, number>();
 let cancelled = false;
 
-const shown = computed(() => reel.value[reelIndex.value]);
-const neighbour = (offset: number) => reel.value[reelIndex.value + offset];
 const onShelf = computed(() =>
   pick.value ? shelf.get(pick.value.id) : undefined,
 );
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// Resolves once the image is in the browser cache (or failed), so the cover
+// appears in one piece instead of loading in after the reveal
+const preload = (src: string | undefined) =>
+  new Promise<void>((resolve) => {
+    if (!src) return resolve();
+    const img = new Image();
+    img.onload = img.onerror = () => resolve();
+    img.src = src;
+  });
 
 const shuffle = <T,>(items: T[]) => {
   const result = [...items];
@@ -84,6 +92,7 @@ const roll = async () => {
   spinning.value = true;
   pick.value = null;
   error.value = null;
+  const minRoll = sleep(reducedMotion.value === "reduce" ? 0 : MIN_ROLL_MS);
 
   try {
     if (pool.value.length < 6) {
@@ -104,21 +113,11 @@ const roll = async () => {
     return;
   }
 
-  // Build a reel of random covers that ends on the pick, then slow down
-  // as it approaches the end like a slot machine
-  const steps = reducedMotion.value === "reduce" ? 0 : SPIN_STEPS;
-  const filler = Array.from(
-    { length: steps + 1 },
-    () => pool.value[randomInt(0, pool.value.length - 1)] ?? target,
-  );
-  reel.value = [...filler.slice(0, steps), target, filler[steps]!];
-  reelIndex.value = 0;
-
-  for (let i = 0; i < steps; i++) {
-    await sleep(45 + Math.pow(i / steps, 2.4) * 320);
-    if (cancelled) return;
-    reelIndex.value = i + 1;
-  }
+  await Promise.all([
+    minRoll,
+    preload(resizedImage(target.background_image, COVER_WIDTH)),
+  ]);
+  if (cancelled) return;
 
   pick.value = target;
   backdrop.set(target.background_image);
@@ -169,41 +168,23 @@ onBeforeUnmount(() => (cancelled = true));
     </header>
 
     <section class="machine">
-      <div
-        class="reel"
-        :class="{ 'reel--spinning': spinning, 'reel--done': pick }"
-      >
-        <div
-          v-if="neighbour(-1)"
-          class="reel__ghost reel__ghost--left"
-          aria-hidden="true"
-        >
+      <div class="cover" :class="{ 'cover--done': pick }">
+        <Transition name="cover" mode="out-in">
           <img
-            :src="resizedImage(neighbour(-1)!.background_image, 420)"
-            alt=""
+            v-if="pick"
+            :key="pick.id"
+            :src="resizedImage(pick.background_image, COVER_WIDTH)"
+            :alt="pick.name"
+            class="cover__img"
           />
-        </div>
-        <div class="reel__window">
-          <img
-            v-if="shown"
-            :key="shown.id + '-' + reelIndex"
-            :src="resizedImage(shown.background_image, 640)"
-            :alt="pick ? pick.name : ''"
-            class="reel__img"
-          />
-          <div v-else class="reel__placeholder">?</div>
-          <div v-if="pick" class="reel__burst" aria-hidden="true"></div>
-        </div>
-        <div
-          v-if="neighbour(1)"
-          class="reel__ghost reel__ghost--right"
-          aria-hidden="true"
-        >
-          <img
-            :src="resizedImage(neighbour(1)!.background_image, 420)"
-            alt=""
-          />
-        </div>
+          <div v-else class="cover__placeholder" aria-hidden="true">
+            <AppIcon
+              name="dice"
+              :size="64"
+              :class="{ 'cover__dice--spinning': spinning }"
+            />
+          </div>
+        </Transition>
       </div>
 
       <div class="result" aria-live="polite">
@@ -292,94 +273,60 @@ onBeforeUnmount(() => (cancelled = true));
   }
 }
 
-// * Reel
+// * Cover
 
-.reel {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem 0;
-}
-
-.reel__window {
+.cover {
+  justify-self: center;
   width: min(100%, 520px);
   aspect-ratio: 16 / 10;
   border-radius: var(--r-lg);
   overflow: hidden;
-  z-index: 2;
   background: var(--neutral-bg-secondary);
   box-shadow:
     var(--shadow-2),
     0 0 0 1px rgb(255 255 255 / 0.12);
   transition: box-shadow 0.5s;
 
-  .reel--done & {
+  &--done {
     box-shadow:
       var(--shadow-2),
       0 0 0 2px var(--accent),
       0 0 60px rgb(139 92 246 / 0.55);
-    animation: land 0.5s var(--ease-out);
   }
 }
 
-.reel__img {
+.cover__img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-
-  .reel--spinning & {
-    animation: flick 0.12s ease-out;
-    filter: blur(1.5px) saturate(130%);
-  }
 }
 
-.reel__placeholder {
+.cover__placeholder {
   display: grid;
   place-items: center;
   height: 100%;
-  font-family: var(--font-display);
-  font-size: 6rem;
   color: var(--accent-strong);
 }
 
-.reel__ghost {
-  position: absolute;
-  width: min(36%, 220px);
-  aspect-ratio: 16 / 10;
-  border-radius: var(--r-md);
-  overflow: hidden;
-  opacity: 0.35;
-  filter: blur(2px);
-  transition: opacity 0.4s;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  &--left {
-    left: 0;
-    transform: perspective(600px) rotateY(25deg);
-  }
-
-  &--right {
-    right: 0;
-    transform: perspective(600px) rotateY(-25deg);
-  }
-
-  .reel--done & {
-    opacity: 0;
-  }
+.cover__dice--spinning {
+  animation: spin 0.8s linear infinite;
 }
 
-.reel__burst {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle, rgb(255 255 255 / 0.5), transparent 60%);
-  animation: burst 0.7s ease-out forwards;
-  pointer-events: none;
+.cover-enter-active,
+.cover-leave-active {
+  transition:
+    opacity 0.3s,
+    transform 0.3s var(--ease-out);
+}
+
+.cover-enter-from {
+  opacity: 0;
+  transform: scale(0.96);
+}
+
+.cover-leave-to {
+  opacity: 0;
 }
 
 // * Result
@@ -457,29 +404,6 @@ onBeforeUnmount(() => (cancelled = true));
 .result-enter-from {
   opacity: 0;
   transform: translateY(16px);
-}
-
-@keyframes flick {
-  from {
-    transform: translateY(-14%);
-  }
-}
-
-@keyframes land {
-  40% {
-    transform: scale(1.04);
-  }
-}
-
-@keyframes burst {
-  from {
-    opacity: 1;
-    transform: scale(0.6);
-  }
-  to {
-    opacity: 0;
-    transform: scale(1.6);
-  }
 }
 
 @keyframes spin {
