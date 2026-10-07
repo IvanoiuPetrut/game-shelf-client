@@ -9,6 +9,8 @@ services:
     restart: unless-stopped
     environment:
       RAWG_API_KEY: ${RAWG_API_KEY:?Set RAWG_API_KEY in .env}
+      # Traefik is the one proxy in front, so client IPs come from X-Forwarded-For
+      TRUST_PROXY: "1"
     labels:
       - traefik.enable=true
       - traefik.http.routers.game-shelf.rule=Host(`game-shelf.petrut.dev`)

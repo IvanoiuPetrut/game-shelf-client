@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const { rateLimit } = require("express-rate-limit");
 const path = require("path");
 
 // Load apps/server/.env when present (local development)
@@ -13,7 +14,18 @@ const PORT = process.env.PORT || 8080;
 const STATIC_DIR =
   process.env.STATIC_DIR || path.join(__dirname, "../client/dist");
 
+// How many reverse proxies sit in front of the app (e.g. `1` for Traefik), or
+// a comma-separated list of their addresses. Without it every request would
+// look like it came from the proxy, so per-client rate limiting would break.
+// Leave unset when clients connect directly, so X-Forwarded-For can't be
+// spoofed.
+const parseTrustProxy = (value) => {
+  if (!value) return false;
+  return /^\d+$/.test(value) ? Number(value) : value;
+};
+
 const app = express();
+app.set("trust proxy", parseTrustProxy(process.env.TRUST_PROXY));
 
 // * Middlewares
 
@@ -34,7 +46,17 @@ api.use((req, res) => {
   res.status(404).send({ message: "Not found" });
 });
 
-app.use("/api", api);
+// Every API call can cost RAWG quota, so each client gets a generous budget
+// that normal browsing never reaches but scripted abuse quickly does.
+const apiLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000,
+  limit: 300,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: { message: "Too many requests, please try again later" },
+});
+
+app.use("/api", apiLimiter, api);
 
 // * Client
 
