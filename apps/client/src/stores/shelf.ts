@@ -1,7 +1,7 @@
 import { computed } from "vue";
 import { defineStore } from "pinia";
 import { useLocalStorage } from "@vueuse/core";
-import type { GameBasics } from "@/types/rawg";
+import type { GameBasics, NamedRef } from "@/types/rawg";
 
 export type ShelfStatus = "playing" | "completed" | "wishlist" | "dropped";
 
@@ -23,13 +23,65 @@ export interface ShelfEntry extends GameBasics {
   updatedAt: string;
 }
 
-const isShelfEntry = (value: unknown): value is ShelfEntry => {
-  const entry = value as ShelfEntry;
+const MAX_TEXT_LENGTH = 500;
+
+const text = (value: unknown) =>
+  typeof value === "string" && value.length <= MAX_TEXT_LENGTH
+    ? value
+    : undefined;
+
+const numberIn = (value: unknown, min: number, max: number) =>
+  typeof value === "number" && value >= min && value <= max
+    ? value
+    : undefined;
+
+const isoDateText = (value: unknown) => {
+  const date = text(value);
+  return date && !Number.isNaN(Date.parse(date)) ? date : undefined;
+};
+
+const isNamedRef = (value: unknown): value is NamedRef => {
+  const ref = value as NamedRef;
   return (
-    typeof entry?.id === "number" &&
-    typeof entry.name === "string" &&
-    SHELF_STATUSES.some((s) => s.value === entry.status)
+    Number.isSafeInteger(ref?.id) &&
+    text(ref.name) !== undefined &&
+    text(ref.slug) !== undefined
   );
+};
+
+// Rebuilds an entry from an imported file, keeping only known fields with the
+// right types, so a crafted file can't put unexpected data in the shelf or
+// break the pages that render it. Returns null when the entry is unusable.
+const toShelfEntry = (value: unknown): ShelfEntry | null => {
+  if (typeof value !== "object" || value === null) return null;
+  const entry = value as Record<string, unknown>;
+  const id = entry.id;
+  const name = text(entry.name);
+  const status = SHELF_STATUSES.find((s) => s.value === entry.status)?.value;
+  if (!Number.isSafeInteger(id) || (id as number) <= 0 || !name || !status) {
+    return null;
+  }
+
+  const image = text(entry.background_image);
+  const now = new Date().toISOString();
+  return {
+    id: id as number,
+    slug: text(entry.slug) ?? String(id),
+    name,
+    background_image: image?.startsWith("https://") ? image : null,
+    metacritic: numberIn(entry.metacritic, 0, 100) ?? null,
+    released: isoDateText(entry.released) ?? null,
+    genres: Array.isArray(entry.genres)
+      ? entry.genres
+          .filter(isNamedRef)
+          .map(({ id, name, slug }) => ({ id, name, slug }))
+      : [],
+    playtime: numberIn(entry.playtime, 0, 100_000) ?? 0,
+    status,
+    rating: numberIn(entry.rating, 1, 5) ?? null,
+    addedAt: isoDateText(entry.addedAt) ?? now,
+    updatedAt: isoDateText(entry.updatedAt) ?? now,
+  };
 };
 
 // The user's game library. It lives only in this browser's localStorage.
@@ -123,7 +175,9 @@ export const useShelfStore = defineStore("shelf", () => {
     const parsed = JSON.parse(text);
     const games: unknown[] = Array.isArray(parsed) ? parsed : parsed?.games;
     if (!Array.isArray(games)) throw new Error("Not a Game Shelf export");
-    const valid = games.filter(isShelfEntry);
+    const valid = games
+      .map(toShelfEntry)
+      .filter((entry): entry is ShelfEntry => entry !== null);
     valid.forEach((entry) => {
       entries.value[entry.id] = entry;
     });
