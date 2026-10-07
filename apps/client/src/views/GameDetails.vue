@@ -18,6 +18,7 @@ import type {
 } from "@/types/rawg";
 import { useBackdropStore } from "@/stores/backdrop";
 import { formatDate, resizedImage } from "@/utils/format";
+import { sanitizeHtml } from "@/utils/sanitize";
 import ScoreBadge from "@/components/ui/ScoreBadge.vue";
 import ChipTag from "@/components/ui/ChipTag.vue";
 import SkeletonBlock from "@/components/ui/SkeletonBlock.vue";
@@ -65,6 +66,8 @@ const stores = computed(() =>
       (store.domain ? `https://${store.domain}` : undefined),
   })),
 );
+
+const description = computed(() => sanitizeHtml(game.value?.description));
 
 const isLongDescription = computed(
   () => (game.value?.description.length ?? 0) > 700,
@@ -173,7 +176,7 @@ onMounted(loadGame);
                 'description--clamped':
                   isLongDescription && !descriptionExpanded,
               }"
-              v-html="game.description"
+              v-html="description"
             ></div>
             <button
               v-if="isLongDescription"
