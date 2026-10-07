@@ -1,0 +1,22 @@
+# Production stack. The deploy workflow copies this file to ~/apps/game-shelf on the VPS,
+# where Traefik routes game-shelf.petrut.dev to it. RAWG_API_KEY lives in the .env next to it.
+name: game-shelf
+
+services:
+  game-shelf:
+    image: ghcr.io/ivanoiupetrut/game-shelf-client:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    environment:
+      RAWG_API_KEY: ${RAWG_API_KEY:?Set RAWG_API_KEY in .env}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.game-shelf.rule=Host(`game-shelf.petrut.dev`)
+      - traefik.http.routers.game-shelf.entrypoints=websecure
+      - traefik.http.routers.game-shelf.tls.certresolver=letsencrypt
+      - traefik.http.services.game-shelf.loadbalancer.server.port=8080
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
